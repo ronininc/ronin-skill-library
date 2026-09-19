@@ -18,7 +18,7 @@ description: >-
 The standing process that turns builds into owned, reusable skills — run it at the end of any build, or
 across the whole portfolio. It never duplicates what's already in the library.
 
-## The pipeline (five steps)
+## The pipeline (six steps)
 1. **Snapshot the library** — `ls ~/.claude/skills` for the exact current skill names. The diff is only as
    good as this snapshot; nothing already here gets re-authored.
 2. **Inventory the target(s)** — one repo or all. Per repo get stack + size + last commit
@@ -33,6 +33,14 @@ across the whole portfolio. It never duplicates what's already in the library.
    one. Author-in-the-same-pass roughly halves the work.
 5. **Verify on disk + regenerate the index** — never trust an agent's word: confirm each SKILL.md exists
    with real content (`wc -c`), then slot the new skills into the composition index recipes.
+6. **Back up to the private GitHub repo** — the harvest isn't finished until the library is pushed. FIRST
+   re-run a secret/PII scan over the new/changed SKILL.md files (grep for `sk-`/`sk-ant`, `AKIA`, `ghp_`,
+   `-----BEGIN`, `xoxb-`, `AIza`, known client phones/emails, long hardcoded hex/base64) — pushing
+   distributes the content even to a PRIVATE repo, so never push unscanned. Then, in `~/.claude/skills`:
+   `git add -A && git commit -m "<what this harvest added>" && git push` — the remote `origin` is
+   **github.com/ronininc/ronin-skill-library (PRIVATE)**. Prefix with `SOLOMON_GO=1` if the egress guard
+   blocks the push. NO Claude/AI attribution in the commit message (house no-signature rule). The remote
+   MUST stay private — never add or push to a public remote; client-derived patterns live here.
 
 ## How to run it (workflow template)
 Fan out with the Workflow tool: **one agent per NOVEL repo** (deep-strip + author + verify), **one triage
