@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>web-effects-catalog — demo</title>
+  <script>document.documentElement.classList.add('reveal-armed');</script>
+  <link rel="stylesheet" href="assets/reveal.css">
+  <link rel="stylesheet" href="assets/xv.css">
+  <style>
+    :root { --ink:#1d1630; --brand:#6d3bd4; --brand2:#7ac943; --paper:#f6f4fb; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+           color:var(--ink); background:var(--paper); }
+    header { text-align:center; padding:56px 20px 8px; }
+    header h1 { margin:0; font-size:clamp(26px,5vw,44px); letter-spacing:-.02em; }
+    header p { color:#6a5f82; max-width:640px; margin:12px auto 0; }
+    .wrap { max-width:1040px; margin:0 auto; padding:24px 20px 96px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:40px; }
+    @media (max-width:760px){ .row { grid-template-columns:1fr; } }
+    .card { background:#fff; border-radius:24px; padding:28px 24px 40px; text-align:center;
+            box-shadow:0 20px 50px -30px rgba(60,30,120,.5); }
+    .card h2 { margin:0 0 4px; font-size:20px; }
+    .card .hint { color:#8a7fa3; font-size:13px; margin:0 0 26px; }
+
+    /* Shared scene sizing */
+    .xv-scene { width:280px; height:300px; margin:10px auto 40px; }
+    .xv-stage { width:100%; height:100%; }
+    .xv-part { position:absolute; top:50%; left:50%; margin:-46px 0 0 -46px;
+               width:92px; height:92px; display:grid; place-items:center; }
+    .disc { width:92px; height:92px; border-radius:50%; display:grid; place-items:center;
+            font-size:44px; box-shadow:0 8px 18px -8px rgba(0,0,0,.4); }
+
+    /* Bowl palette */
+    .b-bowl  { background:#e9e2f7; font-size:52px; box-shadow:inset 0 -10px 20px -10px rgba(0,0,0,.25); }
+    .b-acai  { background:#5a2d9c; }
+    .b-ban   { background:#ffe6a1; }
+    .b-gran  { background:#d9a86b; }
+    .b-straw { background:#ff6b81; }
+    .b-blue  { background:#4a6bd8; }
+    .b-honey { background:#ffd35c; }
+    .b-mint  { background:#8fd66b; }
+
+    /* PC palette */
+    .p-case  { background:#2b2f3a; font-size:52px; }
+    .p-mobo  { background:#1f6b3b; }
+    .p-gpu   { background:#c0392b; }
+    .p-ram   { background:#2d7dd2; }
+    .p-cpu   { background:#e0a800; }
+    .p-psu   { background:#4b4f5a; }
+
+    .foot { text-align:center; color:#8a7fa3; font-size:13px; margin-top:12px; }
+    section.block { margin-top:64px; text-align:center; }
+    section.block h3 { font-size:clamp(20px,3vw,30px); margin:0 0 10px; }
+    section.block p { color:#6a5f82; max-width:560px; margin:0 auto; }
+    .pill { display:inline-block; margin-top:18px; background:var(--brand); color:#fff;
+            padding:12px 26px; border-radius:999px; font-weight:600; text-decoration:none; }
+    .spacer { height:40vh; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="reveal">See what's inside</h1>
+    <p class="reveal" data-reveal-delay="120">Hover, focus, or tap an item — its parts blow apart and float, then coalesce back when you leave. One engine, any product line.</p>
+  </header>
+
+  <div class="wrap">
+    <div class="row">
+      <!-- Açaí bowl -->
+      <div class="card reveal">
+        <h2>Açaí bowl</h2>
+        <p class="hint">Hover to inspect the ingredients</p>
+        <div class="xv-scene" data-xv data-xv-spread="1" aria-label="Açaí bowl ingredients">
+          <div class="xv-stage">
+            <div class="xv-part" data-label="Bowl"        data-dx="0"    data-dy="96"><span class="disc b-bowl">🥣</span></div>
+            <div class="xv-part" data-label="Açaí base"   data-dx="0"    data-dy="44"><span class="disc b-acai">🍇</span></div>
+            <div class="xv-part" data-label="Banana"      data-dx="-134" data-dy="14"><span class="disc b-ban">🍌</span></div>
+            <div class="xv-part" data-label="Granola"     data-dx="134"  data-dy="14"><span class="disc b-gran">🥣</span></div>
+            <div class="xv-part" data-label="Strawberry"  data-dx="-98"  data-dy="-84"><span class="disc b-straw">🍓</span></div>
+            <div class="xv-part" data-label="Blueberry"   data-dx="98"   data-dy="-84"><span class="disc b-blue">🫐</span></div>
+            <div class="xv-part" data-label="Honey"       data-dx="0"    data-dy="-128"><span class="disc b-honey">🍯</span></div>
+            <div class="xv-part" data-label="Mint"        data-dx="0"    data-dy="-176"><span class="disc b-mint">🌿</span></div>
+          </div>
+        </div>
+        <div class="foot">data-xv · radial + Z float</div>
+      </div>
+
+      <!-- PC -->
+      <div class="card reveal" data-reveal="right">
+        <h2>Desktop PC</h2>
+        <p class="hint">Same engine — furniture, gadgets, anything layered</p>
+        <div class="xv-scene" data-xv aria-label="Desktop PC components">
+          <div class="xv-stage">
+            <div class="xv-part" data-label="Case"        data-dx="0"    data-dy="0"><span class="disc p-case">🖥️</span></div>
+            <div class="xv-part" data-label="Motherboard" data-dx="0"    data-dy="120"><span class="disc p-mobo">🔲</span></div>
+            <div class="xv-part" data-label="GPU"         data-dx="-150" data-dy="34"><span class="disc p-gpu">🎮</span></div>
+            <div class="xv-part" data-label="RAM"         data-dx="150"  data-dy="34"><span class="disc p-ram">📊</span></div>
+            <div class="xv-part" data-label="CPU"         data-dx="-108" data-dy="-96"><span class="disc p-cpu">🧠</span></div>
+            <div class="xv-part" data-label="PSU"         data-dx="108"  data-dy="-96"><span class="disc p-psu">🔋</span></div>
+          </div>
+        </div>
+        <div class="foot">data-xv · authored vectors</div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <section class="block">
+      <h3 class="reveal">Reveal-on-scroll, done right</h3>
+      <p class="reveal" data-reveal-delay="120">Every block here is visible to search engines and no-JS visitors by default — the slide-up is an enhancement, not a gate. That's the one thing the acai-site template gets wrong.</p>
+      <a class="pill reveal" data-reveal="zoom" data-reveal-delay="220" href="#">Order online</a>
+    </section>
+  </div>
+
+  <script src="assets/reveal.js"></script>
+  <script src="assets/xv.js"></script>
+</body>
+</html>

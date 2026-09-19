@@ -1,0 +1,13 @@
+{
+  "name": "crm-intelligence",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Sovereign, explainable ML layer for the CRM nodes — edge scoring, forecasting, semantic search, and governed LLM assist.",
+  "scripts": {
+    "test": "node _proof/score.test.mjs && node _proof/forecast.test.mjs && node _proof/semantic-assist.test.mjs && node _proof/semantic-d1-free.test.mjs",
+    "test:score": "node _proof/score.test.mjs",
+    "test:forecast": "node _proof/forecast.test.mjs",
+    "test:semantic-assist": "node _proof/semantic-assist.test.mjs"
+  }
+}

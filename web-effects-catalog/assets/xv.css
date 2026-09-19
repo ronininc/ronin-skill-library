@@ -1,0 +1,73 @@
+/* xv — exploded-view inspector styles. Pair with xv.js.
+   Palette-neutral: parts inherit your colours; only motion/shadow live here. */
+
+.xv-scene {
+  perspective: 1100px;
+  cursor: pointer;
+  outline: none;
+}
+.xv-scene:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+.xv-stage {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--xv-tx, 0deg)) rotateY(var(--xv-ty, 0deg));
+  transition: transform .45s ease;
+}
+
+/* Outer part = the transitioned explode offset (spring-out / coalesce). */
+.xv-part {
+  transform: translate3d(0, 0, 0) rotate(0deg);
+  transition:
+    transform .58s cubic-bezier(.22, 1, .36, 1),
+    box-shadow .58s ease,
+    filter .45s ease;
+  will-change: transform;
+}
+.is-xv .xv-part {
+  transform:
+    translate3d(var(--xv-dx, 0px), var(--xv-dy, 0px), var(--xv-dz, 0px))
+    rotate(var(--xv-dr, 0deg));
+  box-shadow: 0 26px 44px -20px rgba(0, 0, 0, .5);
+  filter: saturate(1.05);
+}
+
+/* Inner wrapper = the per-frame vacuum drift (JS writes transform here). */
+.xv-inner {
+  will-change: transform;
+}
+
+/* Part labels: hidden until exploded, so the assembled item stays clean. */
+.xv-label {
+  position: absolute;
+  left: 50%;
+  bottom: -1.35em;
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  font: 600 clamp(10px, 1.6vw, 13px)/1 var(--xv-label-font, inherit);
+  letter-spacing: .02em;
+  padding: .28em .6em;
+  border-radius: 999px;
+  background: var(--xv-label-bg, rgba(20, 20, 24, .82));
+  color: var(--xv-label-fg, #fff);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s ease, transform .4s ease;
+}
+.is-xv .xv-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Reduced-motion: reveal information, drop the travel and drift entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .xv-stage { transition: none; transform: none; }
+  .xv-part { transition: box-shadow .2s ease; }
+  .is-xv .xv-part { transform: none; box-shadow: 0 0 0 2px currentColor inset; }
+  .xv-inner { transform: none !important; }
+  .xv-label { transition: opacity .15s ease; }
+}

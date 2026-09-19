@@ -1,0 +1,34 @@
+/* reveal — accessible scroll-entrance styles. Pair with reveal.js.
+
+   Key rule: .reveal is ONLY hidden while <html> has .reveal-armed (set by the
+   inline head script). No JS, no observer, or reduced motion → .reveal-armed is
+   absent/removed and every .reveal renders normally. Content is never dependent
+   on animation to be seen (unlike stock page-builder entrance effects). */
+
+.reveal-armed .reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity .7s cubic-bezier(.22, 1, .36, 1),
+    transform .7s cubic-bezier(.22, 1, .36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-armed .reveal[data-reveal="down"]  { transform: translateY(-28px); }
+.reveal-armed .reveal[data-reveal="left"]  { transform: translateX(-40px); }
+.reveal-armed .reveal[data-reveal="right"] { transform: translateX(40px); }
+.reveal-armed .reveal[data-reveal="zoom"]  { transform: scale(.92); }
+.reveal-armed .reveal[data-reveal="fade"]  { transform: none; }
+
+.reveal-armed .reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-armed .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
