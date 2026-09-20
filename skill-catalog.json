@@ -1,10 +1,10 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-09-20T00:36:20.145Z",
+  "generated": "2026-09-20T03:41:19.730Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 145,
+  "skillCount": 150,
   "recipeCount": 6,
-  "packCount": 22,
+  "packCount": 24,
   "foundation": [
     "cf-identity",
     "cf-abuse-guard",
@@ -35,6 +35,7 @@
         "commerce-spine",
         "d1-image-store",
         "crm-build-standard",
+        "custom-fields-engine",
         "cf-forms",
         "quick-capture-inbox",
         "governed-email-outreach",
@@ -225,6 +226,24 @@
         "worker-media-headers",
         "chunked-uploader",
         "d1-image-store"
+      ]
+    },
+    {
+      "name": "Data lifecycle & sustainability (six-layer \"D\")",
+      "skills": [
+        "logical-backup-ndjson-r2",
+        "r2-upload-budget-guard",
+        "export-before-delete-reclaim",
+        "sovereign-store-zip-writer",
+        "commerce-spine",
+        "crm-build-standard"
+      ]
+    },
+    {
+      "name": "Vertical-agnostic fields",
+      "skills": [
+        "custom-fields-engine",
+        "collision-safe-identifier-derivation"
       ]
     },
     {
@@ -604,6 +623,13 @@
       "path": "crm-workforce-productivity/SKILL.md"
     },
     {
+      "slug": "custom-fields-engine",
+      "dir": "custom-fields-engine",
+      "name": "custom-fields-engine",
+      "description": "The atom that makes a CRM/records app VERTICAL-AGNOSTIC without a code fork: an ADMIN defines an extra field schema (label + type + options, scoped per entity) and STAFF set that field's value per record — so a dentist, a law firm, a gym, a salon, or a contractor differ only in config rows and data, NEVER in schema code. It encodes two hard splits: (1) field-DEFINITION lives in a normalized `*_field_defs` table while field-VALUE lives in a JSON blob column on the record, and (2) DEFINING or DELETING a field is a schema change (admin-only), while SETTING a value is ordinary data entry (staff / records-clearance) — with every value-write whitelisted against the current defs so the blob can only ever hold defined keys. Use WHENEVER a build must adapt its record model to a client's vertical at runtime: \"let them add their own fields\", \"add a custom field\", \"don't hardcode the schema for this vertical\", \"make the CRM fit a dentist / gym / law firm\", \"per-client / per-vertical fields\", \"extra fields on a contact / lead / member / patient / case\", \"admin defines fields, staff fill them in\", \"EAV / flexible attributes without a migration per client\", or \"one codebase, many industries\". COMPLEMENTS (extend, do NOT duplicate): crm-build-standard (this is the mechanism that makes its one build serve any pipeline), commerce-spine (the D1 node these defs + values land in), and collision-safe-identifier-derivation (call it at the label→key seam when an operator authors several fields at once — the base here relies only on a UNIQUE constraint + upsert, which MERGES two labels that slug alike instead of suffixing them). Guardrail: the two-tier permission split is non-negotiable and values are UNTYPED at rest — never let the value path define schema, and never trust the JSON blob to enforce a field's declared type.",
+      "path": "custom-fields-engine/SKILL.md"
+    },
+    {
       "slug": "d1-image-store",
       "dir": "d1-image-store",
       "name": "d1-image-store",
@@ -707,6 +733,13 @@
       "name": "exclusive-lead-claim-desk",
       "description": "The PULL side of a lead marketplace: a self-serve BUYER portal where partners log in, browse the leads inside THEIR coverage as masked teasers, and CLAIM one exclusively — with the contact details being the PRODUCT, so they stay hidden until the claim is recorded. A claim records what is OWED and reveals the full contact atomically; it NEVER charges a card. Exclusivity is enforced at the DB layer (a partial UNIQUE index allows at most one non-released claim per lead), coverage is re-verified on the claim (not trusted from the browse list), and a release frees the lead back to the pool. Use WHENEVER buyers should SHOP and CLAIM leads/opportunities themselves rather than have them auto-pushed — \"let partners browse and claim leads\", \"exclusive lead claim\", \"buyer self-serve portal\", \"first-come-first-served lead pool\", \"reveal contact after purchase\", \"mask the lead until they buy\", \"release/return a lead\", or a two-sided marketplace's demand side. It COMPLEMENTS lead-marketplace-auto-match (the PUSH model against the same tables — offer this as the alternative distribution mode), cf-identity (the login pattern it mirrors), prepaid-wallet-ledger (the separate money path a claim's OWED balance later settles through), and crm-build-standard. Do NOT charge inside the claim — recording OWED and moving money are different steps.",
       "path": "exclusive-lead-claim-desk/SKILL.md"
+    },
+    {
+      "slug": "export-before-delete-reclaim",
+      "dir": "export-before-delete-reclaim",
+      "name": "export-before-delete-reclaim",
+      "description": "The choreography that makes a space-freeing purge reversible: any reclaim FIRST assembles a COMPLETE archive of exactly what is about to disappear — the blobs + a records.ndjson of the owning DB rows (child AND parent) + a manifest.csv + a summary — and only deletes AFTER the archive bytes exist in hand. The whole export-then-purge sequence lives in ONE handler, so the invariant holds no matter what pulls the trigger: an admin \"reclaim space\" button, a \"we're near the R2 limit\" prompt, or a future auto-sweep. Ships a read-only preview endpoint (what a run WOULD free, deletes nothing) beside the destructive one, a per-run byte budget so a Worker never blows its ~128 MB isolate ceiling (reporting how much remains for a follow-up run), and the discipline that EVERY purged record is represented in the archive even when its blob is already gone. Use WHENEVER a build must purge to reclaim space and you want it reversible: \"back up before you delete\", \"purge old uploads safely\", \"we're near the R2 / storage limit\", \"clean up old attachments but don't lose the records\", \"export their records before deleting\", \"archive-then- delete\", \"give me a download of what I'm about to remove\". Backend on a Cloudflare Worker + D1 + an object store (R2). COMPLEMENTS (extends, does NOT duplicate): sovereign-store-zip-writer (the byte-exact STORE-method makeZip this HANDS its entries to — that skill owns \"how bytes become a .zip\", this owns \"what must be in the archive and when we may delete\"); r2-upload-budget-guard (owns the account-wide budget refusal + usage readout that DECIDE when to reclaim — this is the safe purge it invokes); logical-backup-ndjson-r2 (the scheduled WHOLE-DB backup — this is the targeted, on-demand purge that shares its {\"_t\",\"r\"} ndjson line format so a reclaim archive re-imports through the same restore path); and append-only-audit-log (log every reclaim run + its freed bytes). Guardrails: build the archive BEFORE the first delete — archive throws ⇒ nothing is deleted; require an explicit confirm on the destructive call; bound each run by a byte cap and report the remainder; NEVER purge the backups themselves (that is the recovery story); gate the destructive route to the OWNER, not a sub-clearance; a single blob over the run cap is listed, not truncated.",
+      "path": "export-before-delete-reclaim/SKILL.md"
     },
     {
       "slug": "fact-preference-memory",
@@ -882,6 +915,13 @@
       "name": "local-seo-location-pages",
       "description": "The programmatic local-SEO page-fan-out generator for a static site: from ONE data array of locations (or target cities) + ONE template function, emit one dedicated, individually-indexable landing page per location — each with its own LocalBusiness/Restaurant JSON-LD (real NAP + geo), a canonical URL, a maps deep-link, a location switcher, and cross-links to sibling locations — plus a hub page (with an optional pin map) and matching sitemap entries. This is the pSEO technique that turns a single-page brochure into N pages that rank for \"<business> in <city>\". Use WHENEVER a build has MORE THAN ONE physical location, or wants to rank in nearby cities/neighborhoods: \"a page per location\", \"per-city landing pages\", \"location pages for SEO\", \"we have 8 stores, give each its own page\", \"rank for the surrounding towns\", \"multi-location site\", \"location switcher + store finder\", or \"generate the location pages from a list\". It EXTENDS website-build-standard (which builds the ONE site; this fans it out to per-location pages and their JSON-LD/sitemap), and is DISTINCT from geo-directory-prospecting (that mines geo directories for INBOUND leads — this PUBLISHES outbound landing pages), auto-blog-network (a blog-content network, not location NAP pages), and single-source-data-embed (that inlines assets into one self-contained file — orthogonal; a location generator can still inline per-page). Pairs with business-profile-recon (pull each location's REAL NAP — never fabricate an address, phone, or hours).",
       "path": "local-seo-location-pages/SKILL.md"
+    },
+    {
+      "slug": "logical-backup-ndjson-r2",
+      "dir": "logical-backup-ndjson-r2",
+      "name": "logical-backup-ndjson-r2",
+      "description": "The recovery story a single-D1 app otherwise never gets: dump EVERY business table to newline-delimited JSON ({\"_t\":table,\"r\":row} per line), gzip it in the Worker runtime (~8-12x on repetitive rows), and write it to a PRIVATE R2 prefix (backups/<ISO-timestamp>.ndjson.gz) that no public route serves — plus a daily cron that runs it unattended (at most once/24h), tunable keep-N retention that prunes the oldest so R2 stays bounded, a viewer-readable run log, an admin-only on-demand run + streamed download, and a DOCUMENTED MANUAL restore (never a one-click endpoint). The dump is SCHEMA-AGNOSTIC — it enumerates tables from sqlite_master and SELECTs *, so it keeps capturing whatever columns/tables were added later with zero backup-code changes. Use WHENEVER a build needs: \"back up the CRM / the database\", \"give this a recovery story / disaster recovery\", \"export the whole DB\", \"how do we restore this / restore from backup\", \"keep only the last N backups\", \"prune old backups so R2 stays bounded\", or when they add their own tables/fields and the backup must keep working untouched. (For a pure storage-cap \"refuse uploads past the limit\" / usage-readout intent, or an archive-then-delete-attachments purge, reach for r2-upload-budget-guard / export-before-delete-reclaim instead — this skill is the DB dump + restore lifecycle.) Backend pattern on a Cloudflare Worker + D1 + R2. COMPLEMENTS d1-migration-recipes (restore = re-apply the migration chain, THEN reload rows; the schema ships as one additive Mode-A migration), append-only-audit-log (the backup_runs table is that same provable-log discipline, specialized to backup outcomes), and d1-proof-harness (prove a dump→gzip→restore round-trip end to end). Draws a hard boundary with r2-upload-budget-guard: THAT skill owns the account-wide R2 budget guard (refuse uploads past the cap), the usage readout, and the export-before-delete reclaim — it only gestures at backups; THIS skill owns the backup/restore lifecycle in full (dump format, run log, cron, export, manual restore, round-trip proof). The shared seam is the keep-N retention prune. And custom-fields-engine is what LETS users add their own fields; this skill's schema-agnostic dump merely captures them for free. Guardrails: R2 put + retention prune are BEST-EFFORT (never fail the backup, and never throw into the cron); the run is ALWAYS logged, even on failure (ok=0 + error); restore is a DELIBERATE manual procedure into a FRESH db, never a blind overwrite of live data; skip sqlite_/\\_cf_/d1_ internal tables and the migration ledger; column is run_trigger, NOT trigger (reserved SQLite keyword); backups contain PII so the bucket stays private and the download endpoint admin-only.",
+      "path": "logical-backup-ndjson-r2/SKILL.md"
     },
     {
       "slug": "media-generation-dispatch",
@@ -1073,6 +1113,13 @@
       "path": "quick-capture-inbox/SKILL.md"
     },
     {
+      "slug": "r2-upload-budget-guard",
+      "dir": "r2-upload-budget-guard",
+      "name": "r2-upload-budget-guard",
+      "description": "Keep a Cloudflare R2 build from silently tripping into overage: the 10 GB free tier is ACCOUNT-wide (shared by every bucket AND every instance on the account), so this puts a per-instance upload BUDGET GUARD in front of the one unbounded multiplier — writes are REFUSED (HTTP 507) once total R2 usage would cross a soft budget (default 9 GB, 1 GB headroom under the cap), using an early-stopping running sum that stops the moment it exceeds the budget so it costs a full list only while there's room. Ships with a live USAGE READOUT (R2 bytes grouped by key-prefix + D1 size via PRAGMA page_count × page_size and per-table row counts vs the free caps, with headroom + an over_budget flag) and an edge-cache (Cache API `caches.default`) proxy for third-party imagery so hot tiles are NEVER stored in R2. Use WHENEVER a build touches R2 free-tier limits or storage safety: \"we're near the R2 limit\", \"refuse uploads past the free tier\", \"how much R2/D1 am I using\", \"keep many instances under one account's storage cap\", or \"edge-cache third-party tiles instead of storing them in R2\". COMPLEMENTS (extend, do NOT duplicate): d1-image-store (the no-R2 free-tier baseline — this guards the build AFTER it graduates to R2), worker-media-headers (range/CSP serving of the bytes), chunked-uploader (the no-R2 big-file path this bounds), and its two storage-lifecycle SIBLINGS — logical-backup-ndjson-r2 (the DB dump / retention / restore; the readout here only DISPLAYS `backups/` bytes, that skill OWNS writing + pruning them) and export-before-delete-reclaim (archive-then-purge to free space; this refuses the WRITE, that reclaims the SPACE). Guardrails: the budget is ACCOUNT-wide, not per-bucket — sum the whole bucket, refuse (never truncate), and re-check the TRUE object size after the put when Content-Length was absent (roll the object back if it crossed); edge-cache third-party imagery, don't store it.",
+      "path": "r2-upload-budget-guard/SKILL.md"
+    },
+    {
       "slug": "reference-intel-matcher",
       "dir": "reference-intel-matcher",
       "name": "reference-intel-matcher",
@@ -1225,6 +1272,13 @@
       "name": "sovereign-edge-scorer",
       "description": "A learned, EXPLAINABLE propensity score that runs as pure JS inside a Cloudflare Worker (or any edge/mobile backend) with ZERO network calls and NO external ML service: train logistic regression OFFLINE on exported CRM rows, ship the fitted coefficients as a tiny `weights.json`, and score live entities at the edge — and every score returns the ranked signed factors that produced it, so the CRM can SHOW an operator WHY, never a black-box number. The model is data the operator owns; the feature EXTRACTORS (entity → numbers) live in the app because they read your schema, and the model is just the coefficients. Ships with the honest engineering: z-score standardization baked into the model, gradient descent + L2, a Mann–Whitney (rank-based) AUC + precision/recall evaluator, and an offline trainer that does an 80/20 held-out split and WARNS when AUC < 0.65 (weak signal — get more labeled outcomes before relying on it). Use WHENEVER a build needs \"score/rank leads or members by likelihood to convert / churn / reorder\", \"a propensity model that runs offline / with no API\", \"explainable scoring\", \"which accounts are about to lapse\", \"train on our own outcomes and ship the model\", or \"learn from what actually converted.\" It COMPLEMENTS crm-build-standard (the records it scores) and lead-qualifier (that is an OFFLINE, one-lead CSV verifier with a win-rate heuristic — this is an in-worker LEARNED logistic model with shipped weights); it pairs with ledger-demand-forecast (the same sovereign-edge doctrine for demand) and feeds attack-list-priority-queue / a call list. Guardrails: extractors must be pure + cheap (they run per score); a zero-variance feature is guarded (std→1); retrain on a cadence as outcomes accrue; the score is ADVISORY input to a human/gate, never an automatic money or send decision.",
       "path": "sovereign-edge-scorer/SKILL.md"
+    },
+    {
+      "slug": "sovereign-store-zip-writer",
+      "dir": "sovereign-store-zip-writer",
+      "name": "sovereign-store-zip-writer",
+      "description": "Build a real, standards-correct .zip archive from many in-memory files INSIDE a Cloudflare Worker (or any pure-JS runtime) with ZERO dependencies — no npm zip lib, no supply-chain surface, no native module. Uses the ZIP STORE method (no compression): correct local file headers + central directory + end-of-central-directory records + a hand-rolled IEEE CRC32, so the output opens in `unzip`, macOS Finder and Windows Explorer unchanged. One pure function makeZip(entries, when) -> Uint8Array turns a list of {name, data:Uint8Array} into a single downloadable/streamable buffer. Use WHENEVER a build must hand back MANY files as one archive from the edge: \"back up the CRM / their records\", \"let me download everything\", \"we're near the R2 limit — export before we purge\", \"purge old uploads safely\", \"bundle these attachments + a manifest into one zip\", \"give them a portable export they can re-import\", or \"generate a zip in the Worker without adding a dependency\". COMPLEMENTS export-before-delete-reclaim (that skill owns the build-archive-BEFORE-any-delete choreography, per-run byte cap and manifest — THIS skill is only the byte-exact writer it calls), chunked-uploader (the ingest side: many chunks IN to D1/R2 — this is the bundle side: many files OUT as one archive), and drive-rich-doc-generator (a single Google-native Doc/Sheet from inline text — this is a portable multi-file .zip that needs no SaaS to open). Guardrails: STORE only — it does NOT compress (perfect for already-compressed media / gzip, wasteful for large plain text); the whole archive is assembled in ONE Uint8Array in isolate memory, so cap total bytes per run (well under the ~128 MB Worker ceiling) and paginate big jobs; no ZIP64, so a single archive and any one entry must stay under 4 GB. Patterns/contracts only — genericize every field; never copy client names or data.",
+      "path": "sovereign-store-zip-writer/SKILL.md"
     },
     {
       "slug": "spec-contract-scaffold-pipeline",

@@ -83,6 +83,19 @@ When the operator says **"use our CRM + website + Owner.com skills and build thi
 [client]"** (or just "build the whole thing for [client]"), this skill is the orchestrator
 that runs the three-skill chain end to end, in order, from the client's REAL data:
 
+> **Reproduction model — clone the OS, don't regenerate it.** The sellable product is the
+> full **Ronin OS** (77 worker modules, 72+ migrations, the admin SPA, the `/m` PWA, cron
+> autopilot, MCP servers) — it is reproduced by **cloning the maintained template
+> (`~/Projects/ronininc-site`, whose `main` IS what's deployed) and parameterizing it per
+> client**, NOT by regenerating from references. The complete turnkey runbook — the de-brand
+> checklist (every "Ronin" literal → a client variable), the theme-token reskin that makes
+> the CRM match the client's site, the plug-in-keys/secrets surface (inert-until-keyed), the
+> deploy path + the remote-D1 `7403` scoped-token fix, the tier gate, and the **37-app
+> manifest → tier** — is **`references/turnkey-reproduction.md`**. Regenerating from
+> `references/starter-schema.sql` (below) is the *bespoke-mini-CRM* mode, not the OS. Known
+> turnkey gaps (theme-token layer, one-command provision, seam-vs-workflow connectors) are
+> tracked honestly in that runbook — do not claim them until built.
+
 1. **Owner.com / profile recon — `anthropic-skills:business-profile-recon`.** Reach the
    client's live profiles FIRST — Owner.com, Google Business Profile, Yelp, Instagram/
    TikTok/Facebook, Apple Maps, delivery/ordering platforms — and pull VERIFIED facts
@@ -95,10 +108,14 @@ that runs the three-skill chain end to end, in order, from the client's REAL dat
    from those verified facts + real media (immersive centerpiece, cinematic hero, SVG
    logo, payment-ready shop, inquiry routing — the house defaults). For a sports team use
    `sports-website-standard`; for a restaurant/service business its vertical variant.
-3. **The CRM brain — THIS skill.** Provision the per-site D1 node (`commerce-spine`), gate
-   it (`cf-identity`), wire capture + API (`cf-forms` + `cf-functions`), seed the record
-   model from the recon data, and light up the optional layers (intelligence, outreach)
-   per the guardrails. Free-tier by default (`references/free-tier-playbook.md`).
+3. **The CRM brain — THIS skill.** For the **full OS (turnkey product): CLONE the template**
+   (`references/turnkey-reproduction.md`) — copy `worker/` + `migrations/` + `public/admin/`
+   + `/m` + `wrangler.jsonc` from `ronininc-site`, run the de-brand checklist, apply the
+   theme-token reskin from step 2's palette, and set the sold tier. For a **bespoke mini-CRM**
+   instead: provision a fresh D1 node (`commerce-spine`), gate it (`cf-identity`), wire capture
+   + API (`cf-forms` + `cf-functions`), and seed the record model from `starter-schema.sql`.
+   Either way: light up optional layers per the guardrails; free-tier by default
+   (`references/free-tier-playbook.md`).
 4. **Ship & verify — `cf-deploy`.** Preview → remote D1 + additive migrations → go live,
    operator-approved. Verify by a live record round-trip AND that **login is unchanged**
    (bracket every deploy: user-count before/after, `auth.js`/`SESSION_SECRET` untouched,
@@ -123,7 +140,27 @@ client's own verified data, on the free tier, with their login never disturbed. 
 | **Intelligence (optional)** | `references/intelligence/` | Sovereign, explainable **scoring** (lead-conversion / churn / reorder) + **forecasting** — pure-JS, **zero egress, zero neurons (free-tier stars)**; **governed LLM assist** (never auto-sends) — Workers AI, free within 10k neurons/day, cache + on-demand; **semantic** search/dedup/recommend — Vectorize (`semantic.mjs`, **Paid**) *or* the free path (`semantic-d1-free.mjs`, embeddings-in-D1 + in-Worker cosine). **42 proof assertions**. |
 | **Outreach (optional)** | `references/power-dialer.md` | A compliance-first, live-agent **power dialer** inside the CRM (DNC/TCPA/consent gated, AMD auto-advance, browser softphone). |
 | **Workforce productivity (optional)** | `references/workforce-productivity.md` | The admin's real-time **"who's working, who's not"** dataset — active/idle/offline, weighted score, per-active-hour rate, trend, team rollup. **Activity-derived from real CRM work, NOT surveillance.** Ships an append-only D1 ledger + a pure-JS Worker endpoint + the shared view panel (same core as Solomon's dashboard). Free-tier: tiny rows, zero neurons. |
+| **Custom fields (vertical-agnostic)** | `custom-fields-engine` | An admin DEFINES extra fields (label/type/options per entity); staff SET values per record — so a dentist vs salon vs contractor differ only in config rows + data, **never in schema code**. The mechanism that lets the ONE build serve any vertical at runtime, no per-client migration. |
+| **Data lifecycle & sustainability** | `logical-backup-ndjson-r2` + `r2-upload-budget-guard` + `export-before-delete-reclaim` + `sovereign-store-zip-writer` | **The layer shallow CRMs skip.** Gzip-NDJSON backups → private R2 with keep-N retention + a documented restore; an account-wide R2 budget guard that REFUSES writes past ~9 GB (never a silent overage) + a live usage readout; export-before-delete reclaim (build the ZIP archive before any purge); a dependency-free STORE zip writer. Keeps a free-tier CRM bounded and recoverable by construction. |
 | **Notion substrate (alternative)** | `notion-intake-crm-cloner` | When the client wants to own the CRM in their **own Notion workspace** (lead-driven service firms) instead of a Cloudflare node. |
+
+## The six-layer "full CRM" bar (what makes it FULL, not shallow)
+
+A template missing ANY layer is the "trash CRM" failure mode. Every full build has all six — this is
+the bar a CRM is measured against before it ships:
+
+| Layer | Delivered by |
+|---|---|
+| **A · Platform spine** (per-tenant isolation) | `commerce-spine` (per-site Worker + D1 node) + `d1-image-store` / R2 + PWA assets + `cf-deploy` — 1 Worker + 1 D1 + 1 R2 + assets **per client, on the client's OWN Cloudflare account**. Never a shared bucket/DB across tenants. |
+| **B · Security** (fail-closed) | `cf-identity` (sessions/roles) + `clearance-rbac` (route→section map; **unmapped routes default-DENY** for non-admins; destructive routes off-map = owner-only) + sameOrigin CSRF on every non-GET + `field-encryption-at-rest` (AES-GCM for free-text PII) + `worker-media-headers` + `idempotent-public-submission` (uploads: nosniff + inline-type allowlist + tenancy on upload AND list AND serve). |
+| **C · Core CRM + custom fields** | this skill's records / pipeline / activities / intake + `custom-fields-engine` (vertical = config + data, never schema code) + first-party `self-schedule-booking` (never mailto/Google). |
+| **D · Data lifecycle & sustainability** | `logical-backup-ndjson-r2` + `r2-upload-budget-guard` + `export-before-delete-reclaim` + `sovereign-store-zip-writer`. **The layer shallow CRMs skip** — no backup, no budget awareness, blind delete are the trash tells. |
+| **E · Presentation** (agnostic) | `website-build-standard` + SEO baseline (never fabricate) + real photos (`site-media-fetch`, not clipart) + `universal-i18n-runtime` + a versioned network-first PWA service worker. Editorial layout, **not** AI card-grid slop. No AR / no prices unless asked. |
+| **F · Engineering discipline** | `d1-proof-harness` + the house rules: TSC clean, prove each mechanism standalone, browser-verify UI, no needless deps, **no fake PASS**. |
+
+**Stop-doing — the tells of a trash CRM:** vertical hardcoded into schema; no auth/clearance/CSRF; blind
+delete with no backup/export; unbounded R2 with no budget awareness; a shared bucket/DB across tenants;
+plaintext PII at rest; card-grid slop UI. If any of these are true, it isn't a full Ronin CRM yet.
 
 ## The customization surface (this is the only part that differs per client)
 
@@ -180,6 +217,7 @@ Everything above is reused. You tailor **four things** (see `references/customiz
 
 ## References
 
+- `references/turnkey-reproduction.md` — **read this to reproduce the full Ronin OS for a client** — the clone-and-parameterize model, the canonical template (`ronininc-site`, `main` = deployed), the de-brand checklist, the theme-token reskin, the plug-in-keys/secrets surface, the deploy path + `7403` fix, the tier gate, the 37-app → tier manifest, and the honest turnkey gaps.
 - `references/tiers.md` — **the good/better/best packaging** — the three sellable tiers, the proven runtime gate (`app_store.min_tier` + `instance_config.tier` + `applyTier`), and the one-command tiered provision.
 - `references/free-tier-playbook.md` — **read first when the client is on free** — the grounded limits + the ten master moves that keep a CRM on the free plan.
 - `references/feature-catalog.md` — every reusable CRM feature profiled, de-conflicted (pick-one conflict groups + additive set), each with its free-tier cost and where it's proven.
