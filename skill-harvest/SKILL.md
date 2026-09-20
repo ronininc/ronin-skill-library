@@ -31,13 +31,19 @@ across the whole portfolio. It never duplicates what's already in the library.
    author as two separate workflows). For each novel repo, an agent reads the subsystems, lists
    capabilities, marks each `net_new` vs the snapshot, and immediately writes a SKILL.md for every net-new
    one. Author-in-the-same-pass roughly halves the work.
-5. **Verify on disk + regenerate the index** — never trust an agent's word: confirm each SKILL.md exists
-   with real content (`wc -c`), then slot the new skills into the composition index recipes.
+5. **Verify on disk + regenerate the index + the machine catalog** — never trust an agent's word: confirm
+   each SKILL.md exists with real content (`wc -c`), then slot the new skills into the composition index
+   recipes. Then regenerate the machine-readable catalog: `node ~/.claude/skills/skill-harvest/build-catalog.mjs`
+   → rewrites `skill-catalog.json` (the ONE artifact Solomon's build brain and the CRM's D1 seed both read;
+   see `SKILLS_DISTRIBUTION_PLAN.md` in TSS). Read its summary: the skill count must match the index, and
+   **`orphanReferences` must be empty** — a non-empty list means the index names a skill with no SKILL.md
+   (author it, or fix the index reference) before you commit.
 6. **Back up to the private GitHub repo** — the harvest isn't finished until the library is pushed. FIRST
    re-run a secret/PII scan over the new/changed SKILL.md files (grep for `sk-`/`sk-ant`, `AKIA`, `ghp_`,
    `-----BEGIN`, `xoxb-`, `AIza`, known client phones/emails, long hardcoded hex/base64) — pushing
    distributes the content even to a PRIVATE repo, so never push unscanned. Then, in `~/.claude/skills`:
-   `git add -A && git commit -m "<what this harvest added>" && git push` — the remote `origin` is
+   `git add -A && git commit -m "<what this harvest added>" && git push` (this stages the regenerated
+   `skill-catalog.json` + `CRM_COMPOSITION_INDEX.md` alongside the new SKILL.md files) — the remote `origin` is
    **github.com/ronininc/ronin-skill-library (PRIVATE)**. Prefix with `SOLOMON_GO=1` if the egress guard
    blocks the push. NO Claude/AI attribution in the commit message (house no-signature rule). The remote
    MUST stay private — never add or push to a public remote; client-derived patterns live here.
