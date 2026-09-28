@@ -76,6 +76,23 @@ returns `{value, confidence, reason}` as JSON you can branch on.
 
 ## When NOT to reach for it
 
-Hard reasoning, architecture, security/money/tenancy code, or anything where a
-confidently-wrong draft would be worse than spending the tokens. Those stay on
-Claude.
+The deciding rule is **pattern vs reasoning, and is the round-trip worth it**:
+
+- **Reasoning, not pattern → keep on Claude.** Writing a function is a *pattern*
+  task the local model does well; predicting a function's *exact* output (test
+  expectations, "what does this return"), multi-step logic, or architecture is
+  *reasoning* it fails — even when the task looks "narrow." Test EXPECTATIONS in
+  particular: offload the test scaffold, but compute the expected values yourself.
+- **Trivial code → just write it inline.** A 5–10 line pure function is faster to
+  write than the offload round-trip; don't offload it.
+- **Cold start / pressured host → not worth it for small tasks.** On an 8GB box a
+  cold model load can take 120s+; for anything small the latency + memory-pressure
+  cost beats the token savings. Offloading trades tokens for wall-clock and RAM —
+  only worth it when the generation is big enough to earn that trade.
+- **Security/money/tenancy, or anything correctness-critical unreviewed** → Claude.
+  (Redaction regexes, auth, payments: a confidently-wrong draft is worse than the
+  tokens.)
+
+Rule of thumb: reach for `augment` on *sizeable pattern work when a model is
+already warm*; write it yourself when it's trivial, reasoning-shaped, cold-start,
+or correctness-critical.

@@ -1,10 +1,10 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-09-20T03:41:19.730Z",
+  "generated": "2026-09-28T20:52:39.274Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 150,
+  "skillCount": 166,
   "recipeCount": 6,
-  "packCount": 24,
+  "packCount": 29,
   "foundation": [
     "cf-identity",
     "cf-abuse-guard",
@@ -174,7 +174,8 @@
         "governance-diode",
         "append-only-audit-log",
         "non-blocking-dissent-record",
-        "contribution-credit-canon"
+        "contribution-credit-canon",
+        "daemon-fleet-switchboard"
       ]
     },
     {
@@ -270,7 +271,8 @@
         "confirmed-inputs-decision-gate",
         "buy-box-matcher",
         "az-cash-buyer-finder",
-        "valuation-pof-engine"
+        "valuation-pof-engine",
+        "county-records-comps-arv"
       ]
     },
     {
@@ -345,6 +347,7 @@
         "spec-contract-scaffold-pipeline",
         "collision-safe-identifier-derivation",
         "untrusted-preview-sandbox",
+        "profile-to-editorial-site",
         "pluggable-draft-brain"
       ]
     },
@@ -374,6 +377,16 @@
       ]
     },
     {
+      "name": "AAA render & promo",
+      "skills": [
+        "aaa-render-sources",
+        "brag-reel",
+        "gltf-draco-model-normalizer",
+        "webgpu-image-finish-pass",
+        "osm-building-massing-layer"
+      ]
+    },
+    {
       "name": "Geo & mapping",
       "skills": [
         "overpass-query-hardening",
@@ -387,7 +400,49 @@
       "name": "Agent tool safety",
       "skills": [
         "governed-mcp-tool-actuator",
-        "crm-mcp-server"
+        "crm-mcp-server",
+        "least-privilege-mcp-connector"
+      ]
+    },
+    {
+      "name": "OSINT & enrichment (public sources, candidate-not-verified)",
+      "skills": [
+        "multi-source-identity-resolver",
+        "public-relationship-graph",
+        "grounded-llm-extraction",
+        "sovereign-image-geolocation",
+        "decision-maker-email-extractor",
+        "contact-enrichment-deliverability",
+        "reference-intel-matcher",
+        "open-data-signal-discovery"
+      ]
+    },
+    {
+      "name": "Local-sovereign media & recovery (nothing leaves the box)",
+      "skills": [
+        "local-media-transcription-pipeline",
+        "desktop-app-cache-media-recovery",
+        "screen-recording-ocr-text-recovery",
+        "site-media-fetch",
+        "brag-reel"
+      ]
+    },
+    {
+      "name": "Sovereign runtime & relay (defeat edge limits from home)",
+      "skills": [
+        "residential-edge-relay",
+        "local-message-store-crm-relay",
+        "local-first-inference-ladder"
+      ]
+    },
+    {
+      "name": "Cold outreach (vetted OSS stack)",
+      "skills": [
+        "cold-email-stack",
+        "governed-email-outreach",
+        "outbound-compliance-gate",
+        "send-once-idempotent-email",
+        "contact-enrichment-deliverability"
       ]
     }
   ],
@@ -401,10 +456,18 @@
     "skill-harvest — run it at the end; any net-new capability re-enters the library and this index."
   ],
   "orphanReferences": [
+    "site-media-fetch",
     "spanish-regional-localization",
     "website-build-standard"
   ],
   "skills": [
+    {
+      "slug": "aaa-render-sources",
+      "dir": "aaa-render-sources",
+      "name": "aaa-render-sources",
+      "description": "The operator's AAA render resource pack — production-grade, OPEN sources to build and render with in Blender: Blender Studio open movies + production files (Charge, Sprite Fright, Spring… CC-BY 4.0), Blender source + official demo/splash scenes, Poly Haven (CC0 textures/HDRIs/models, API), ambientCG (CC0 PBR, API), Smithsonian Open Access 3D (CC0 museum scans, API), Kenney (CC0 stylized game kits), NASA 3D Resources (public-domain spacecraft/rovers), Sketchfab CC0-only (museum/heritage scans), Quaternius + Poly Pizza (stylized), USGS 3DEP + NOAA real-world terrain (public domain), OpenStreetMap buildings, and OpenMontage (AGPL agentic video-production system: explainers, trailers, documentary montage from real open footage) as the long-form video lane. Use WHENEVER a build or content piece needs photoreal or cinematic 3D: \"AAA render\", \"make it look like a Blender Studio film\", \"real textures/materials\", \"HDRI lighting\", \"3D hero for the site\", \"render a product/scene\", \"skill pack for renders\", or any Blender/EEVEE/Cycles task. When the operator says \"I need skill packs for AAA renders\" they mean MORE sources of THIS class — open licence, film/game-production quality, programmatically fetchable — not tutorials or paid marketplaces. Pairs with brag-reel (renders → ads), website-build-standard (3D heroes), and the Blender render paths in Solomon.",
+      "path": "aaa-render-sources/SKILL.md"
+    },
     {
       "slug": "admin-search-export",
       "dir": "admin-search-export",
@@ -460,6 +523,13 @@
       "name": "blended-score-trust-gate",
       "description": "The ranking DELTA for a live CRM: blend a LEARNED propensity (win-rate-by-signal, learned online from operator good/bad feedback inside the request path) with an INDEPENDENT deterministic score into ONE priority number — but only let the learned half count once it has enough labeled signal, otherwise fall back cleanly to the deterministic score. It carries the numerical-safety engineering that makes an ONLINE learner survive sparse/one-class live data: finite log-odds via a clamp so all-good / all-bad / tiny-sample never yield NaN/Infinity, a both-classes gate that returns a safe null (no false confidence) until it has seen a win AND a loss, a per-feature minimum-count before a signal is trusted, and a controlled outcome vocabulary so an unknown label is ignored (never silently scored as a failure). Use WHENEVER a build must \"rank leads by what actually converts\", \"blend a model score with our own score\", \"don't let the ranker overreact to two data points\", \"learn from good/bad feedback in production\", \"show why it ranked this high\", or \"degrade to the base score until the model is trustworthy\". It does NOT re-teach the transparent win-rate learner — that lives in lead-qualifier (the OFFLINE, one-lead-at-a-time CSV enricher); this is the IN-WORKER, blended, trust-gated, numerically-hardened delta. It COMPLEMENTS lead-qualifier (reuse its learner concept) and attack-list-priority-queue (deterministic urgency×gain ranking — this blends a learned half into that kind of score). Guardrail: the learned score is advisory until proven; the blend weights and trust threshold are business-specific — parameterize them.",
       "path": "blended-score-trust-gate/SKILL.md"
+    },
+    {
+      "slug": "brag-reel",
+      "dir": "brag-reel",
+      "name": "brag-reel",
+      "description": "Cut a short social AD / promo reel (10-35s MP4) for Instagram Reels, TikTok, YouTube or LinkedIn out of a screen recording, product screenshots, or photos — built on this machine with ffmpeg and ImageMagick only, no cloud service, no AI video model, no npm install. Use WHENEVER the user wants to \"turn this recording into an ad\", \"make a promo/reel/brag video for my app/site/business\", \"cut an ad for Instagram/YouTube/LinkedIn\", \"make a launch video\", \"show off what we built\", or drops a .mov/.mp4 and asks for marketing out of it. Produces one cut per platform (9:16, 16:9, 1:1) from ONE shared script, against a creative gate that refuses to ship an unreadable or dishonest reel. Do NOT use for long-form tutorials (use video-walkthrough) or generated footage (use movie-gen / media-generation-dispatch).",
+      "path": "brag-reel/SKILL.md"
     },
     {
       "slug": "buy-box-matcher",
@@ -546,6 +616,13 @@
       "path": "clover-connector/SKILL.md"
     },
     {
+      "slug": "cold-email-stack",
+      "dir": "cold-email-stack",
+      "name": "cold-email-stack",
+      "description": "The vetted open-source cold-email stack (from github.com/topics/cold-email) and the house rules for any cold outreach Ronin, Solomon, or a client CRM sends. Use WHENEVER a task involves cold email or outbound: building or fixing an outreach campaign, finding or verifying lead emails, a bounce/deliverability problem, warmup, writing cold copy, reply handling, an AI SDR/GTM agent, or \"use the cold-email repos\". Covers which repo does what, its licence posture (MIT/Apache usable, AGPL run-only, unlicensed reference-only), and the non-negotiables: verify every mailbox before the first send, keep bounces under 2-3% with a breaker at 8%, authenticate the sending domain, warm new senders, and never send what the operator has not released.",
+      "path": "cold-email-stack/SKILL.md"
+    },
+    {
       "slug": "collision-safe-identifier-derivation",
       "dir": "collision-safe-identifier-derivation",
       "name": "collision-safe-identifier-derivation",
@@ -593,6 +670,13 @@
       "name": "contribution-credit-canon",
       "description": "A governed capability/contribution registry where a customer-, community-, or partner-built system becomes the owner's proprietary CANON while the CONTRIBUTOR's credit is permanently preserved — and contributing NEVER raises the contributor's price. Every entry carries a dual watermark (owner + contributor), an explicit `customerDataIncluded:false` (only the capability/pattern is canonized, never the data it ran on), a `mayBeSoldAsStandaloneUpsell:false`, a `noPriceIncreaseFromContribution:true`, and a canonization gate that refuses to promote an entry unless the watermarks are present, no customer data is included, and an authority approved it. On top of the registry it adds an OPEN idea program: contributors submit ideas, an eligibility check enforces attribution+ownership before an idea can enter a weekly public draw, the draw is announced with contributor credit, completion is tracked, and public \"expansion telemetry\" (time since last release, active drawn idea, next estimate) is exposed for a marketing page. Use WHENEVER a build needs \"credit contributors without giving away ownership\", \"customers can extend the product and we canonize it\", \"a public idea/feature-request program with recognition\", \"weekly community draw\", \"preserve attribution on contributed capabilities\", \"no price penalty for contributing\", or \"public roadmap/expansion telemetry\". It COMPLEMENTS partner-referral-program (money for REFERRALS — this is CREDIT for contributed CAPABILITY, no money moves), white-label-branding (rebranding — this instead preserves the contributor's mark under the owner's canon), ventures-portfolio-rollup, and risk-classified-review-queue (the review/build lane a drawn idea actually flows through). Guardrail: customer DATA never enters the canon; only the capability does.",
       "path": "contribution-credit-canon/SKILL.md"
+    },
+    {
+      "slug": "county-records-comps-arv",
+      "dir": "county-records-comps-arv",
+      "name": "county-records-comps-arv",
+      "description": "A comparable-sales valuation engine that turns a FREE county assessor's public GIS parcel service into a proposed As-Is value and ARV (after-repair value) for a real-estate deal — the piece that unblocks wholesale underwriting when deals pile up at \"sourced\" because nobody produced a defensible ARV. Given a parcel (APN), it pulls same-property-use sales in the SAME subdivision (else a small lat/lon box), filters to arm's-length sales in the last 12 months (18 if thin), within ±30% living area, trims $/sq-ft outliers, then: As-Is = median $/sq-ft × subject sq-ft, ARV = 75th-percentile $/sq-ft × sq-ft (renovated homes sell at the top of the comp set), with a confidence grade from comp count + spread and the comp set attached as evidence. It PROPOSES only — it never writes the deal's confirmed numbers; a separate operator confirm (who also picks a light/medium/heavy repair preset) turns the estimate into the numbers underwriting may use. Use WHENEVER a build must \"estimate ARV / as-is value from comps\", \"pull comparable sales for a property\", \"underwrite a wholesale deal\", \"value a house from public records\", \"what's this parcel worth\", or \"propose a repair budget\" — anywhere free county data can replace a paid comps API. It COMPLEMENTS valuation-pof-engine (both are READ-ONLY, evidence-graded value engines that move no money — that one values a securities book from live quotes, this values real property from public comps), buy-box-matcher / az-cash-buyer-finder (which decide FIT and find the exit — this supplies the value they need), and confirmed-inputs-decision-gate (the operator confirm this rides on). Guardrails: it never writes the confirmed ARV/repair fields on its own; every estimate carries its comps so it can be checked; non-arm's-length transfers ($10 quitclaims, sub-threshold sales) and $/sq-ft outliers are dropped, never averaged in.",
+      "path": "county-records-comps-arv/SKILL.md"
     },
     {
       "slug": "crew-job-scheduler",
@@ -665,6 +749,13 @@
       "path": "d1-work-queue/SKILL.md"
     },
     {
+      "slug": "daemon-fleet-switchboard",
+      "dir": "daemon-fleet-switchboard",
+      "name": "daemon-fleet-switchboard",
+      "description": "The ONE operator panel that registers every background daemon on a Cloudflare Worker + D1 app's cron, shows whether each is on and when it last ran, and arms them from a single control — because a fleet of cron daemons that each ship OFF behind their own `*_settings.enabled` flag makes the machine feel dead (\"nothing is happening\") with no one place to see or fix it. Each daemon is one row in a registry with a SAFETY TIER (safe = internal work only | sends = produces outbound comms | publishes = posts public content | always-on/connector-gated), a uniform singleton-settings toggle, a resilient run-recorder, an \"arm all safe\" that turns on internal daemons ONLY, and a shared kill-switch. Use WHENEVER a build has grown several scheduled jobs and the operator needs to command them: \"one switchboard for all my background jobs\", \"why isn't anything running\", \"turn on the automation\", \"arm everything safe\", \"a panel of every daemon with last-run + on/off\", \"kill all automation now\", or \"everything should be a toggle.\" It COMPLEMENTS pipeline-autopilot and any single self-running vertical (each becomes ONE daemon in this registry, not a bespoke panel), graduated-autonomy-tiers (the per-STAGE dial inside one daemon; this is the per-DAEMON fleet layer above it), and feature-activation-gate (the ships-dark switch a daemon still honors). Guardrails: money/outbound/publish daemons are NEVER turned on by \"arm all safe\" — only the 'safe' tier is; the run-recorder swallows every daemon error so one crash never kills the cron tick.",
+      "path": "daemon-fleet-switchboard/SKILL.md"
+    },
+    {
       "slug": "data-feed-intake",
       "dir": "data-feed-intake",
       "name": "data-feed-intake",
@@ -677,6 +768,13 @@
       "name": "decision-maker-email-extractor",
       "description": "A standalone enrichment atom that finds the actual OWNER/CEO/principal of a business — not the generic info@ box — from public pages only, then name-matches a person-specific mailbox. It parses schema.org Person JSON-LD for a decision-maker job title, falls back to a role±name regex over readable page text, follows /about /team /leadership /staff pages, and matches a harvested email to the person by first/last-name tokens (flagging inferred addresses do-not-send-without-verification). Use WHENEVER a lead needs \"find the owner / decision-maker\", \"who runs this business\", \"get the CEO's email not info@\", \"the principal's contact\", or personalizing outreach to a real named person. It is the delta ON TOP of contact-enrichment-deliverability (which grades whether an address is DELIVERABLE) and lead-qualifier (which scores fit) — this atom answers WHO and WHICH mailbox; do NOT re-implement their MX/SMTP verification or fit scoring here. Pairs with geo-directory-prospecting and open-data-signal-discovery (the businesses it runs against). Guardrails: public pages only, strict person-name validation to reject \"About Us\"/\"Our Team\" false positives, and a hard rule that a name-inferred mailbox is a CANDIDATE to verify, never a confirmed send target.",
       "path": "decision-maker-email-extractor/SKILL.md"
+    },
+    {
+      "slug": "desktop-app-cache-media-recovery",
+      "dir": "desktop-app-cache-media-recovery",
+      "name": "desktop-app-cache-media-recovery",
+      "description": "Recover the ORIGINAL media assets a desktop messaging app already downloaded — voice notes, full-resolution photos, videos — straight from the app's on-disk cache, when all you were handed is a screen recording (which has NO audio track and only shows downscaled crops). It locates the app's local Media cache, dedupes the many-times-duplicated files by md5, and re-identifies each asset by matching duration (ffprobe) and file mtime to what's visible in the chat — so a client's \"0:34\" voice note and their 3840×5120 original photo come back as real files, not lossy captures. Use WHENEVER \"the instructions came as a WhatsApp/Signal/Telegram screen recording\", \"the voice note isn't in the video / has no sound\", \"get the real photo not the crop from the recording\", \"pull what they actually sent me\", or any task where the deliverable needs the client's authentic media but you only have a screengrab of the chat. COMPLEMENTS local-media-transcription-pipeline (hand the recovered .opus/.m4a to it for the actual transcript), screen-recording-ocr-text-recovery (recover the TYPED chat text off the same recording), and site-media-fetch (that pulls a business's PUBLIC/remote media with yt-dlp; THIS recovers privately-received media from a local app cache). Guardrails: read-only recovery of media on the operator's OWN machine that they already received — never a tool to reach into another person's device or account; treat every recovered file as client PII (gitignore, never commit). NOTE: no committed script exists yet — this is an unwired, proven command sequence; a future build should lift the commands below into a script.",
+      "path": "desktop-app-cache-media-recovery/SKILL.md"
     },
     {
       "slug": "device-presence-gate",
@@ -847,6 +945,13 @@
       "path": "graduated-autonomy-tiers/SKILL.md"
     },
     {
+      "slug": "grounded-llm-extraction",
+      "dir": "grounded-llm-extraction",
+      "name": "grounded-llm-extraction",
+      "description": "Make \"ask a local LLM to pull a fact (a name, an owner, an entity) out of web-search snippets\" actually trustworthy, by refusing any answer the model can't ground. The model returns strict JSON, then a GROUNDING GUARD rejects it unless a load-bearing token of the answer co-occurs, in a real fetched result, with the thing you searched for — so a famous exec grabbed off an unrelated page (the classic false positive) is thrown out because the target's name and the answer never appear together. Layered validators back it up: a placeholder/\"John Doe\" blocklist, a role/entity-suffix noise filter (a person's name never contains \"owner\"/\"LLC\"), an \"answer isn't just the query restated\" check, and a deterministic skip-list for cases the model over-eagerly guesses. It runs on FREE search (keyless DuckDuckGo HTML with rotating browser UAs + jittered backoff and an anomaly cooldown, a local SearXNG as fallback) so neither the search nor the model costs anything, and it falls back to reading the source's OWN page when snippets are too thin. Use WHENEVER a build does \"have the model read these results and tell me X\", \"extract the owner/entity from search\", \"pull a structured fact from web snippets\", \"who is the … for this business\", or any LLM-over-search extraction that must not hallucinate a confident wrong answer. COMPLEMENTS decision-maker-email- extractor (which extracts from a business's OWN site via JSON-LD + regex — this adds the grounding/anti-hallucination + search-rotation layer for extraction over the open WEB), runs behind residential-edge-relay (local model + local/keyless search the edge can't reach), and reads pages via a sovereign headless reader. Guardrail: an ungrounded answer is DROPPED, never returned as a guess; the model names a source URL and the guard proves the claim against fetched text; search is paced to stay a polite, unbanned citizen.",
+      "path": "grounded-llm-extraction/SKILL.md"
+    },
+    {
       "slug": "hfp-dialer-companion",
       "dir": "hfp-dialer-companion",
       "name": "hfp-dialer-companion",
@@ -889,6 +994,13 @@
       "path": "lead-qualifier/SKILL.md"
     },
     {
+      "slug": "least-privilege-mcp-connector",
+      "dir": "least-privilege-mcp-connector",
+      "name": "least-privilege-mcp-connector",
+      "description": "The pattern for exposing your CRM/app as an MCP server to an UNTRUSTED third-party AI assistant (a vendor's AI connector that trains on and monetizes whatever it sees) — giving it the LEAST that is still useful and NOTHING that can leak PII or change the business. Three moves: (1) a hard field ALLOWLIST view function that maps a full record down to a handful of non-identifying fields (name/company/status/last- touched — never email, phone, notes, or message bodies), so everything not explicitly returned stays in the CRM; (2) aggregate-only snapshots/alerts that reuse the SAME PII-free feed your oversight surface already computes (counts, pipeline value, severities — no names); (3) at most ONE write, scope-gated, that can only drop a note into the operator's capture inbox — the assistant cannot send, book, pay, edit a record, export, or bulk-list. Host + scope gated on every request; revoking the token cuts it off instantly. Use WHENEVER a build must \"connect Meta AI / a partner's AI / an outside assistant to the CRM\", \"let a third-party AI look things up but not see customer data\", \"give a vendor connector read access safely\", \"expose a minimal MCP for an assistant I don't fully trust\", or \"an AI can leave me notes but touch nothing.\" It COMPLEMENTS crm-mcp-server (the full-power MCP server for a TRUSTED operator brain — this is its deliberately-starved sibling for an untrusted caller), scoped-bearer-token (mints/hashes/ revokes the token — reuse it), and governance-diode (the sanitized one-way feed this reuses for aggregates). Guardrails: the allowlist view is the privacy boundary (default-deny every field); the lone write lands in an inbox for a human, never an action; each token scope is re-checked per tool.",
+      "path": "least-privilege-mcp-connector/SKILL.md"
+    },
+    {
       "slug": "ledger-demand-forecast",
       "dir": "ledger-demand-forecast",
       "name": "ledger-demand-forecast",
@@ -901,6 +1013,20 @@
       "name": "local-first-inference-ladder",
       "description": "One reasoning helper any AI-powered client app calls when it needs a model to THINK/answer: it runs a tiered ladder — Tier 0 a self-hosted/local model (Ollama or any OpenAI-compatible endpoint, zero cost, zero egress, the DEFAULT), Tier 1 a capable non-premium cloud \"overflow booster\", Tier 2 a secondary cloud backup — and escalates up the ladder ONLY when the tier below FAILS or returns an UNUSABLE answer (a quality/length threshold, not just a thrown error). Reserve your premium/paid model as last-resort authority outside the ladder so bulk work never burns premium spend. Every cloud tier sits behind a fail-closed EGRESS GATE (a caller \"sensitive\" flag + a secret/PII scanner) so private data never leaves the box on the overflow lane, and every escalation is audited with the tier + reason so an answer can be labeled local vs cloud-assisted. Use WHENEVER a build needs model reasoning that should \"try my own/local model first\", \"only hit the cloud when local can't cope\", \"fall back across providers\", \"don't burn my paid API on easy stuff\", \"never send customer data to a cloud model\", \"which tier answered\", or \"keep it working with zero keys\". COMPLEMENTS pluggable-draft-brain: that is the simpler DRAFT-only try-order (custom→claude→openai→workers-ai, advance on thrown error, returns text) — THIS is the fuller LADDER delta: local-first default, escalate on unusable-not-just-thrown, an overflow-budget/egress gate in front of every cloud tier, per-tier kill-switches, and audit of which tier answered. Use draft-brain for \"write me text\"; use this for \"reason for me, cheaply and privately, upgrading only when forced\". Pairs with scoped-bearer-token (provider keys as env secrets) and connector-egress-circuit-breaker (bound each cloud tier's transport). Guardrail: this returns text + provenance only — it never acts; sending or executing stays with the caller's own governed path.",
       "path": "local-first-inference-ladder/SKILL.md"
+    },
+    {
+      "slug": "local-media-transcription-pipeline",
+      "dir": "local-media-transcription-pipeline",
+      "name": "local-media-transcription-pipeline",
+      "description": "Turn any pile of video/audio into text transcripts entirely ON THIS MACHINE — no upload, no cloud STT, zero per-minute cost — with a resumable ffmpeg → whisper.cpp (Metal) batch. ffmpeg strips a 16k mono WAV, whisper-cli (large-v3-turbo, quantized) writes a .txt + timestamped .json, and a done-file skip makes the whole run re-startable after a crash or a full disk. Use WHENEVER the task is \"transcribe these recordings / calls / voice notes / videos\", \"get the text out of this .mov/.mp3/.m4a\", \"what did they say in this clip\", \"mine tool/OSS/name mentions from footage\", or any ingest that must stay private (client PII, sales calls, voice memos) and never leave the box. COMPLEMENTS local-first-inference-ladder (that ladder is LLM reasoning/text-gen; THIS is speech→text and hands its transcripts to it) and feeds fact-preference-memory / any evidence store as grounded, timestamped source. Guardrail: whisper MANGLES proper nouns — never present an extracted name as clean; fuzzy-match to a known dictionary, keep the raw quote+timestamp as evidence, mark uncertain low-confidence for operator confirmation. Do NOT use for a screen recording with no audio track (use desktop-app-cache-media-recovery + screen-recording-ocr-text-recovery), nor for live/streaming STT (this is a batch of files at rest).",
+      "path": "local-media-transcription-pipeline/SKILL.md"
+    },
+    {
+      "slug": "local-message-store-crm-relay",
+      "dir": "local-message-store-crm-relay",
+      "name": "local-message-store-crm-relay",
+      "description": "Put the texts from the operator's OWN phone onto the CRM contact timeline WITHOUT the messages ever leaving the machine unless they belong to a known contact — by reading the Mac's Messages store (chat.db) READ-ONLY and gating every conversation through a SALTED-HASH contact filter: the relay fetches salted hashes of the CRM's contact numbers, hashes each local conversation's number the same way, and only a hash MATCH lets that text push; every other message is skipped on the box and never transmitted. It is watermark-idempotent (each text stored once, re-runs harmless), decodes the modern typedstream attributedBody (where macOS leaves the plain text NULL), handles one-on-one chats only (no groups, no tapbacks), and turns an inbound \"STOP\" into a do-not-call the same as a carrier opt-out. Use WHENEVER a build needs \"my texts on the customer's timeline\", \"log iMessage/SMS to the CRM\", \"see the conversation history with this lead\", \"pull my phone messages into the CRM privately\", or \"a local relay that files my texts without uploading my whole message history\". COMPLEMENTS text-campaign-platform (its OUTBOUND cousin — that drains a send queue to your number; this INGESTS the replies/history), social-dm-inbox (webhook DMs vs local device texts), quick-capture-inbox (where a matched note lands), and residential-edge-relay (the bearer-push contract it rides). Guardrails: READ-ONLY on chat.db (never send/alter a message); ONLY messages matching a hashed CRM contact ever leave the Mac; one-on-one only; STOP → shared DNC; the token can live in the login Keychain, never a plist; needs Full Disk Access, granted by the operator.",
+      "path": "local-message-store-crm-relay/SKILL.md"
     },
     {
       "slug": "local-presence-did-pool",
@@ -950,6 +1076,13 @@
       "name": "money-feed-health-monitor",
       "description": "A read-only \"money feed\" over a commerce CRM's order ledger, built for a companion phone/oversight app: one endpoint returns money in / money out / net, a 14-day daily series for graphs, recent orders, a \"start working\" queue (paid digital/kit sales not yet delivered), fulfillment-health counts with stuck-order detection (paid > 30 min but never fulfilled), surfaced capital-leaks, and ONE rolled-up condition color (white/yellow/orange/red). It reads the real per-order P&L tables — no separate metrics store to drift. Use WHENEVER a build needs \"money dashboard\", \"cash/P&L health at a glance\", \"companion app feed\", \"how's the store doing right now\", \"what needs my attention\", \"is fulfillment stuck\", \"daily revenue/net chart\", or \"a single status light for the business\". COMPLEMENTS order-pnl-fund-gate- fulfillment (it AGGREGATES the `net_profit_cents`/`cogs_cents`/etc. that skill books — it does not compute finance itself), capital-leak-breaker (it TRIGGERS the leak scan on each poll and renders active breakers as the RED condition), and governance-diode (this PII-free aggregate feed is the natural read-model an oversight/companion role pulls). Do NOT re-implement the P&L, fulfillment, or breaker logic here — this is the aggregate read-model + condition-code delta only. Guardrail: read-only surface, margins/aggregates only (no write path), and the feed poll is what keeps the dead-man's switch scanning.",
       "path": "money-feed-health-monitor/SKILL.md"
+    },
+    {
+      "slug": "multi-source-identity-resolver",
+      "dir": "multi-source-identity-resolver",
+      "name": "multi-source-identity-resolver",
+      "description": "Turn one weak handle (a username, an email, a domain) into a normalized identity dossier built from MULTIPLE public OSINT sources at once (cross-platform account discovery + email-registration probes), then RESOLVE the fields with authority-aware discipline: an API-EXTRACTED value outranks a scraped display string, a value is only asserted when an authoritative source backs it, and a cross-platform username COLLISION (the same handle owned by different people) is surfaced as a conflict flag instead of being silently collapsed into one person. Every output is stamped CANDIDATE, not verified identity, and nothing is fabricated. Use WHENEVER a build must \"enrich this lead from public sources\", \"what accounts does this handle have\", \"build a dossier from a username/email\", \"resolve who this is across platforms\", \"cross-reference their profiles\", or feed a grounded-truth packet to an outreach/decision step. COMPLEMENTS decision-maker-email-extractor (which finds WHO runs a business from its own site) and contact-enrichment-deliverability (which grades whether an address is DELIVERABLE) — this skill answers \"which cross-platform profiles plausibly belong to this handle, and how sure are we,\" a layer neither does; and it feeds reference-intel-matcher (roster match) and public-relationship-graph (who-can-help). Guardrails: PUBLIC sources only; a matched profile is a CANDIDATE to confirm before any outreach; authoritative (API) values outrank scraped ones; name conflicts across platforms are surfaced, never merged; the domain-recon layer is explicitly a stub until wired — never present it as done.",
+      "path": "multi-source-identity-resolver/SKILL.md"
     },
     {
       "slug": "mystery-box-balancer",
@@ -1106,6 +1239,20 @@
       "path": "private-operator-companion-pwa/SKILL.md"
     },
     {
+      "slug": "profile-to-editorial-site",
+      "dir": "profile-to-editorial-site",
+      "name": "profile-to-editorial-site",
+      "description": "A server-side pure function that turns a validated COMPANY PROFILE (name, headline, audience, about, a list of services, contact + logo) into a COMPLETE single-file, responsive, dark \"editorial\" website — string in, whole HTML document out — with an embedded inquiry form that hands submissions to the host CRM. This is the render engine behind an \"App Forge\"-style generator that spins up a real company site from structured data, versioned (`template:'editorial', version:1`) so more templates slot in behind the same parse→render seam. It hard-validates the profile (field length caps, 1–8 services, a logo path that must be an existing /assets image, an email-shape check) and returns the list of MISSING optional fields so the caller can prompt for them. Use WHENEVER a build must \"generate a website from a company's info/profile\", \"spin up a site from these fields\", \"an App Forge / site generator that emits real HTML\", \"make a one-file company site from structured data\", or \"let the CRM produce a prospect's site from recon\" — i.e. a PROGRAMMATIC site render, not a hand-built bespoke design. It COMPLEMENTS website-build-standard (that is the house METHODOLOGY for hand-crafting a premium client site; THIS is the code-generated, data-driven renderer for a productized generator — reach for that when a human is designing, this when a machine is emitting), business-profile-recon (which SOURCES the real profile fields this consumes), and self-schedule-booking / idempotent-public-submission (where the embedded inquiry lands). Guardrails: every profile field is HTML-escaped before it hits the template (the profile is untrusted data); the logo must match an existing /assets image path — no arbitrary/remote URL; only the implemented template is accepted (unknown style throws, never renders a broken page).",
+      "path": "profile-to-editorial-site/SKILL.md"
+    },
+    {
+      "slug": "public-relationship-graph",
+      "dir": "public-relationship-graph",
+      "name": "public-relationship-graph",
+      "description": "The \"who-can-help-me\" engine: take a person or org name and pull its RELATIONSHIP GRAPH from a public-accountability dataset (board seats, executive positions, memberships, ownership stakes, professional / family / donation ties), then normalize every edge to a warm-introduction view — \"our role / their role / the related entity\" — with WARM business categories (board, exec, ownership, professional, hierarchy) ranked and surfaced first, orgs and connected people split out, and a bounded, polite resolver so a non-profit API isn't hammered. Answers \"the butcher's son sits on a bank board\" from PUBLIC filings, not a personal skip-trace. Use WHENEVER a build must \"find a warm path to X\", \"who does this person/company know\", \"map their board / ownership / professional ties\", \"who can introduce me\", \"escalate this brand to its parent / its execs\", or \"give me the relationship graph for this lead\". COMPLEMENTS multi-source-identity-resolver (which resolves WHO the person is across platforms — this maps who they're CONNECTED to), reference-intel-matcher (match a resolved tie back to a curated roster of targets), and az-cash-buyer-finder / geo-directory-prospecting (which SOURCE the entities this runs against). Guardrails: BUSINESS relationship-mapping only — no personal skip-tracing; every tie is PUBLIC RECORD as the source has it and is a CANDIDATE to verify before acting; nothing is fabricated; identify yourself and rate-limit as a polite citizen of a non-profit API.",
+      "path": "public-relationship-graph/SKILL.md"
+    },
+    {
       "slug": "quick-capture-inbox",
       "dir": "quick-capture-inbox",
       "name": "quick-capture-inbox",
@@ -1116,7 +1263,7 @@
       "slug": "r2-upload-budget-guard",
       "dir": "r2-upload-budget-guard",
       "name": "r2-upload-budget-guard",
-      "description": "Keep a Cloudflare R2 build from silently tripping into overage: the 10 GB free tier is ACCOUNT-wide (shared by every bucket AND every instance on the account), so this puts a per-instance upload BUDGET GUARD in front of the one unbounded multiplier — writes are REFUSED (HTTP 507) once total R2 usage would cross a soft budget (default 9 GB, 1 GB headroom under the cap), using an early-stopping running sum that stops the moment it exceeds the budget so it costs a full list only while there's room. Ships with a live USAGE READOUT (R2 bytes grouped by key-prefix + D1 size via PRAGMA page_count × page_size and per-table row counts vs the free caps, with headroom + an over_budget flag) and an edge-cache (Cache API `caches.default`) proxy for third-party imagery so hot tiles are NEVER stored in R2. Use WHENEVER a build touches R2 free-tier limits or storage safety: \"we're near the R2 limit\", \"refuse uploads past the free tier\", \"how much R2/D1 am I using\", \"keep many instances under one account's storage cap\", or \"edge-cache third-party tiles instead of storing them in R2\". COMPLEMENTS (extend, do NOT duplicate): d1-image-store (the no-R2 free-tier baseline — this guards the build AFTER it graduates to R2), worker-media-headers (range/CSP serving of the bytes), chunked-uploader (the no-R2 big-file path this bounds), and its two storage-lifecycle SIBLINGS — logical-backup-ndjson-r2 (the DB dump / retention / restore; the readout here only DISPLAYS `backups/` bytes, that skill OWNS writing + pruning them) and export-before-delete-reclaim (archive-then-purge to free space; this refuses the WRITE, that reclaims the SPACE). Guardrails: the budget is ACCOUNT-wide, not per-bucket — sum the whole bucket, refuse (never truncate), and re-check the TRUE object size after the put when Content-Length was absent (roll the object back if it crossed); edge-cache third-party imagery, don't store it.",
+      "description": "Keep a Cloudflare R2 build from silently tripping into overage: the 10 GB free tier is ACCOUNT-wide (shared by every bucket AND every instance on the account), so this puts a per-instance upload BUDGET GUARD in front of the one unbounded multiplier — writes are REFUSED (HTTP 507) once total R2 usage would cross a soft budget (default 9 GB, 1 GB headroom under the cap), using an early-stopping running sum that stops the moment it exceeds the budget so it costs a full list only while there's room. Ships with a live USAGE READOUT (R2 bytes grouped by key-prefix + D1 size via meta.size_after (live D1 REJECTS PRAGMA page_count — SQLITE_AUTH) and per-table row counts vs the free caps, with headroom + an over_budget flag) and an edge-cache (Cache API `caches.default`) proxy for third-party imagery so hot tiles are NEVER stored in R2. Use WHENEVER a build touches R2 free-tier limits or storage safety: \"we're near the R2 limit\", \"refuse uploads past the free tier\", \"how much R2/D1 am I using\", \"keep many instances under one account's storage cap\", or \"edge-cache third-party tiles instead of storing them in R2\". COMPLEMENTS (extend, do NOT duplicate): d1-image-store (the no-R2 free-tier baseline — this guards the build AFTER it graduates to R2), worker-media-headers (range/CSP serving of the bytes), chunked-uploader (the no-R2 big-file path this bounds), and its two storage-lifecycle SIBLINGS — logical-backup-ndjson-r2 (the DB dump / retention / restore; the readout here only DISPLAYS `backups/` bytes, that skill OWNS writing + pruning them) and export-before-delete-reclaim (archive-then-purge to free space; this refuses the WRITE, that reclaims the SPACE). Guardrails: the budget is ACCOUNT-wide, not per-bucket — sum the whole bucket, refuse (never truncate), and re-check the TRUE object size after the put when Content-Length was absent (roll the object back if it crossed); edge-cache third-party imagery, don't store it.",
       "path": "r2-upload-budget-guard/SKILL.md"
     },
     {
@@ -1132,6 +1279,13 @@
       "name": "reply-intent-triage",
       "description": "A dependency-free, LLM-free heuristic classifier that reads an inbound reply (subject + snippet, decrypted at rest) and labels it interested | not_interested | question | auto | unknown, then ROUTES it — opt-outs are auto-added to the suppression list and their queued sends cancelled, interested replies advance toward booking, auto-replies/bounces are skipped — with zero external or model calls so it runs free on every cron tick. Use WHENEVER a CRM must \"sort inbound replies\", \"detect who's interested\", \"auto-handle unsubscribes/opt-outs\", \"classify email replies\", \"route replies without an LLM\", or \"figure out what a reply means\" at scale and near-zero cost. It is the CLASSIFIER + reply-routing atom that pipeline-autopilot calls each tick (do NOT fold the cron orchestration or the booking send into this skill — those are pipeline-autopilot and self-schedule-booking). It COMPLEMENTS governed-email-outreach and outbound-compliance-gate: this is where a reply READ as an opt-out becomes a suppression entry, closing the compliance loop those skills open. Guardrail: it's a first-pass heuristic, not certainty — opt-out and auto-reply are treated as safe-to-act (suppress / skip), while interested/question/unknown only STAGE work a human or a higher tier confirms; never auto-send anything irreversible off a raw classification.",
       "path": "reply-intent-triage/SKILL.md"
+    },
+    {
+      "slug": "residential-edge-relay",
+      "dir": "residential-edge-relay",
+      "name": "residential-edge-relay",
+      "description": "The home-box relay that defeats edge-IP blocks: a Cloudflare Worker's datacenter IP gets 429/403 from free data APIs (ADS-B, OpenSky, most listing sites) and can't run a browser or reach a LAN service (SearXNG, Ollama, a GPU model) — so a tiny script on the operator's RESIDENTIAL connection does the fetch/compute and PUSHES the result to the Worker over a bearer token, into the exact cache row / job queue the Worker already serves. NO edge egress, NO Worker change to the serve path, one D1 upsert per push, and an operator ARM-GATE (a green button in the app) that the Worker checks before accepting a push. Two shapes: PUSH (the home box pumps a live feed on a cadence) and CLAIM (the home box polls for jobs the edge enqueued, does them locally, posts results back). Use WHENEVER a build hits \"the edge can't fetch this / is rate-limited / is IP-blocked / can't run a browser or a local model\", \"keep the live map/feed warm from home\", \"run the heavy/blocked part on my machine and feed it to the site\", \"a local companion that works a queue from the Worker\", or any \"web app can't do X, hand it to a home runner\" problem. COMPLEMENTS scoped-bearer-token (the auth primitive it rides — don't re-implement the token), data-feed-intake (the inert adapter registry — this is the RUNNER that actually executes), money-feed-health-monitor / connector-egress-circuit-breaker (health + fail- closed on the SERVE side), and text-campaign-platform (the outbound send-queue cousin of the CLAIM shape). Guardrails: the relay only ever pushes INBOUND public data or its own compute to the operator's OWN Worker; the arm-gate means a stopped relay degrades to \"no data\", never a crash; every relay reports and keeps its loop alive across transient upstream errors; never point a \"free by design\" relay's model host at a paid remote (assert localhost).",
+      "path": "residential-edge-relay/SKILL.md"
     },
     {
       "slug": "resilient-hero-video-sequence",
@@ -1181,6 +1335,13 @@
       "name": "scoped-bearer-token",
       "description": "A scoped, revocable API key for headless / companion / non-browser clients of a Cloudflare Worker + D1 app: mint a prefixed token whose PLAINTEXT is shown exactly once (only its SHA-256 hash is stored), authenticate a request by hashing the `Authorization: Bearer` header and matching the stored hash, track last-used, revoke on demand, treat the Bearer path as CSRF-exempt (no cookie ⇒ no browser can auto-send it ⇒ no same-origin check needed), and HARD-SCOPE it at the router to a single API surface — never its own token-management endpoints, never admin. EXTENDS cf-identity (the token resolves to a cf-identity user with least privilege). Use WHENEVER a build needs a machine/agent/CLI/companion to call the API without a login session — \"personal access token\", \"API key\", \"let my script/bot/worker call it\", \"headless client\", \"service credential\", \"a token for the companion app / Raspberry Pi\", \"give the integration a key\". Guardrails: store ONLY the hash (plaintext is unrecoverable after mint), show it once, make it revocable, path-scope it so a leaked token can't escalate, and keep the CSRF exemption EXPLICIT and narrow (Bearer only, never a cookie).",
       "path": "scoped-bearer-token/SKILL.md"
+    },
+    {
+      "slug": "screen-recording-ocr-text-recovery",
+      "dir": "screen-recording-ocr-text-recovery",
+      "name": "screen-recording-ocr-text-recovery",
+      "description": "Recover the TEXT that scrolled past in a screen recording — chat transcripts, terminal output, a document someone screen-recorded instead of copying — by sampling frames at a fixed cadence, OCR'ing each with tesseract, and deduping the overlapping lines back into one clean, ordered transcript. Frame-sampling (fps=1) beats scene-detection here because slow scrolling produces few \"scenes\" and undercounts, silently dropping half the text. Use WHENEVER \"get the text out of this screen recording / screencap video\", \"they screen-recorded the chat instead of forwarding it\", \"read the messages/logs off this .mov\", \"OCR what scrolled by\", or any time the only copy of some text is trapped in a video someone recorded off their screen. COMPLEMENTS desktop-app-cache-media-recovery (that recovers the app's original AUDIO + PHOTOS from cache; THIS recovers the typed lines off the recording itself — run both on the same .mov), local-media-transcription-pipeline (audio → text; THIS is pixels → text), and video-walkthrough (which PRODUCES captured-screen video; this READS one back). Guardrail: OCR is lossy — verify numbers, handles, and anything load-bearing against a second frame; recovered chat text is PII (gitignore, never commit). NOTE: proven ad-hoc command sequence, not yet a committed script — a future build should lift the pipeline below into one.",
+      "path": "screen-recording-ocr-text-recovery/SKILL.md"
     },
     {
       "slug": "scroll-scrub-video",
@@ -1272,6 +1433,13 @@
       "name": "sovereign-edge-scorer",
       "description": "A learned, EXPLAINABLE propensity score that runs as pure JS inside a Cloudflare Worker (or any edge/mobile backend) with ZERO network calls and NO external ML service: train logistic regression OFFLINE on exported CRM rows, ship the fitted coefficients as a tiny `weights.json`, and score live entities at the edge — and every score returns the ranked signed factors that produced it, so the CRM can SHOW an operator WHY, never a black-box number. The model is data the operator owns; the feature EXTRACTORS (entity → numbers) live in the app because they read your schema, and the model is just the coefficients. Ships with the honest engineering: z-score standardization baked into the model, gradient descent + L2, a Mann–Whitney (rank-based) AUC + precision/recall evaluator, and an offline trainer that does an 80/20 held-out split and WARNS when AUC < 0.65 (weak signal — get more labeled outcomes before relying on it). Use WHENEVER a build needs \"score/rank leads or members by likelihood to convert / churn / reorder\", \"a propensity model that runs offline / with no API\", \"explainable scoring\", \"which accounts are about to lapse\", \"train on our own outcomes and ship the model\", or \"learn from what actually converted.\" It COMPLEMENTS crm-build-standard (the records it scores) and lead-qualifier (that is an OFFLINE, one-lead CSV verifier with a win-rate heuristic — this is an in-worker LEARNED logistic model with shipped weights); it pairs with ledger-demand-forecast (the same sovereign-edge doctrine for demand) and feeds attack-list-priority-queue / a call list. Guardrails: extractors must be pure + cheap (they run per score); a zero-variance feature is guarded (std→1); retrain on a cadence as outcomes accrue; the score is ADVISORY input to a human/gate, never an automatic money or send decision.",
       "path": "sovereign-edge-scorer/SKILL.md"
+    },
+    {
+      "slug": "sovereign-image-geolocation",
+      "dir": "sovereign-image-geolocation",
+      "name": "sovereign-image-geolocation",
+      "description": "Read the BACKGROUND of a photo — signs, storefronts, street names, building numbers, architecture, terrain — with a LOCAL vision model, resolve it to a real-world place, geocode it for free, and drop it as a PLACED lead on the map. The whole pipeline is sovereign and free: the vision model runs on a local Ollama (a localhost cost-guard refuses a paid remote host), geocoding uses free OSM Nominatim at a polite 1 req/sec, and the ONLY thing that leaves the machine is the final {name, location, lat, lng} to the operator's own CRM. It NEVER identifies the person in the photo — location only, by construction (the prompt forbids describing anyone). A drop-folder inbox watches for images and moves each to done/ after processing, leaving transient failures to retry. Use WHENEVER a build needs \"where was this photo taken\", \"geolocate this image\", \"turn photos into map pins / placed leads\", \"read the location off a storefront pic\", \"a watch-folder that geolocates whatever I drop in\", or any image→place intake that must stay private and off paid APIs. COMPLEMENTS residential-edge-relay (it IS a claim/push relay — the local vision + geocode is exactly what the edge can't do), geospatial-scene-projector / offline-osm-basemap-map (which RENDER the placed point), and open-data-signal-discovery (another placed-lead source). Guardrails: LOCATION ONLY, never identify a person; assert the model host is localhost so vision stays free; honest misses (\"unknown\" / no geocode) are dropped cleanly, never guessed; Nominatim politeness (1 req/sec, identifying UA).",
+      "path": "sovereign-image-geolocation/SKILL.md"
     },
     {
       "slug": "sovereign-store-zip-writer",

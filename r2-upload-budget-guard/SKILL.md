@@ -7,8 +7,8 @@ description: >-
   REFUSED (HTTP 507) once total R2 usage would cross a soft budget (default 9 GB, 1 GB
   headroom under the cap), using an early-stopping running sum that stops the moment it
   exceeds the budget so it costs a full list only while there's room. Ships with a live
-  USAGE READOUT (R2 bytes grouped by key-prefix + D1 size via PRAGMA page_count × page_size
-  and per-table row counts vs the free caps, with headroom + an over_budget flag) and an
+  USAGE READOUT (R2 bytes grouped by key-prefix + D1 size via meta.size_after (live D1 REJECTS
+  PRAGMA page_count — SQLITE_AUTH) and per-table row counts vs the free caps, with headroom + an over_budget flag) and an
   edge-cache (Cache API `caches.default`) proxy for third-party imagery so hot tiles are
   NEVER stored in R2. Use WHENEVER a build touches R2 free-tier limits or storage safety:
   "we're near the R2 limit", "refuse uploads past the free tier", "how much R2/D1 am I
@@ -80,8 +80,10 @@ binding name, the key prefixes, and the entity/record model when you reapply.
   - `usageReport(env)` **L19-66** — R2: page the bucket, sum bytes, and **group by key-prefix**
     (`backups/`, `uploads/…`, `.pmtiles`, other) so the readout shows *what* is using space (the
     `backups/` line is written by the logical-backup-ndjson-r2 sibling; here it's read-only display);
-    compute `headroom_bytes` + `over_budget`. D1: real size from `PRAGMA page_count` × `PRAGMA
-    page_size`, plus per-table `COUNT(*)` for the top tables. Returns a plain-English `note` naming
+    compute `headroom_bytes` + `over_budget`. D1: real size from `d1Bytes(db)` — the
+    `meta.size_after` of a `SELECT 1` `.run()`, falling back to `PRAGMA page_count` × `page_size`
+    ONLY when meta has no size (local Miniflare) — plus a `size_source` field
+    (`size_after`|`pragma`|`unavailable`) and per-table `COUNT(*)` for the top tables. Returns a plain-English `note` naming
     the account-wide caveat and the mitigations.
 - **Edge-cache third-party imagery, NOT R2** — `worker/sattiles.ts` **L15-37** — a same-origin proxy
   that serves hot third-party raster tiles from `caches.default` (`cache.match` → on miss `fetch`
@@ -140,9 +142,12 @@ When the readout shows `over_budget`, the space is freed by the **export-before-
 sibling — do not implement a purge here.
 
 ### 3. Usage readout handler → `GET /…/usage`
-Sum the bucket grouped by key-prefix; read D1 size from `PRAGMA page_count` × `PRAGMA page_size` and
-per-table `COUNT(*)`; return `{ r2: { bytes, groups, budget_bytes, headroom_bytes, over_budget,
-limit_bytes }, d1: { bytes, rows, top_tables, limit_bytes }, note }`. Request/op COUNTS are
+Sum the bucket grouped by key-prefix; read D1 size from `(await db.prepare('SELECT 1').run()).meta.size_after`
+— **live D1 rejects `PRAGMA page_count` with `SQLITE_AUTH` (7500)**, and a `.catch(() => null)` around
+it silently reports 0 bytes in prod (the ronininc bug, verified 2026-09-24). Keep the PRAGMA product
+only as the local-dev fallback when `size_after` is missing, and return which path answered
+(`size_source`) so a double failure reads `unavailable`, not a believable 0. Then per-table `COUNT(*)`; return `{ r2: { bytes, groups, budget_bytes, headroom_bytes, over_budget,
+limit_bytes }, d1: { bytes, size_source, rows, top_tables, limit_bytes }, note }`. Request/op COUNTS are
 account-level metrics not queryable from a Worker without an analytics token — point the operator to
 the dashboard for those rather than faking them.
 
