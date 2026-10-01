@@ -1,10 +1,10 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-09-28T20:52:39.274Z",
+  "generated": "2026-10-01T08:52:04.463Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 166,
+  "skillCount": 173,
   "recipeCount": 6,
-  "packCount": 29,
+  "packCount": 30,
   "foundation": [
     "cf-identity",
     "cf-abuse-guard",
@@ -310,7 +310,9 @@
       "skills": [
         "sports-website-standard",
         "clover-connector",
-        "shopify-order-bridge"
+        "shopify-order-bridge",
+        "ebay-marketplace-connector",
+        "comp-priced-digital-pack"
       ]
     },
     {
@@ -443,6 +445,19 @@
         "outbound-compliance-gate",
         "send-once-idempotent-email",
         "contact-enrichment-deliverability"
+      ]
+    },
+    {
+      "name": "Money-engine floor (Ronin Station)",
+      "skills": [
+        "station-engine-floor",
+        "truthful-money-ledger",
+        "revenue-readiness-report",
+        "hands-free-daily-shift",
+        "paper-trading-copy-desk",
+        "daemon-fleet-switchboard",
+        "graduated-autonomy-tiers",
+        "governed-operator-console"
       ]
     }
   ],
@@ -637,6 +652,13 @@
       "path": "commerce-spine/SKILL.md"
     },
     {
+      "slug": "comp-priced-digital-pack",
+      "dir": "comp-priced-digital-pack",
+      "name": "comp-priced-digital-pack",
+      "description": "Manufacture a passive DIGITAL product (an N-icon game-asset pack) end to end and price it from REAL competitor listings — the make + price half that sits in front of a digital store. Three net-new pieces: (1) COMP PRICING from an official marketplace API (Etsy Open API v3; nothing scraped) with a strict comparability filter — digital-download only, priced in USD, a readable icon count parsed from the title/ description, a comparable size (half-to-double ours), NOT a franchise/brand listing, ≤2 per shop — then price = MEDIAN per-icon × our count, clamped to an optional operator floor/ceiling; too few comps → NO price, the line STOPS and asks (never invents one). (2) a DURABLE generation pipeline as a Cloudflare Workflow (image model → background removal + multi-size resize via Cloudflare Images → R2, each file hashed, the \"done\" row written LAST so a retry redoes a half-made icon) that METERS its real cost to the ledger. (3) an ORIGINALITY gate — subjects come from a trademark-free catalog and every prompt is refused if it names a franchise/brand/character/artist or \"in the style of\", with AI use disclosed in the listing + LICENSE.txt. Use WHENEVER a build must \"make and sell icon/asset/clipart packs\", \"price a new digital product from what competitors charge\", \"generate a product catalog with AI and sell the files\", \"comp-based pricing with no sales history yet\", or \"a passive digital-goods line\". It COMPLEMENTS digital-product-kit + commerce-spine (the SELL/deliver/catalog side — this is the make+price that feeds them), order-pnl-fund-gate-fulfillment (the fund gate still releases the file only after payment settles), sales-history-price-learning (that learns from your OWN sales; this prices a product that has none yet, from competitors), and runs on a station-engine-floor belt behind its exact-bytes gate. Guardrail: nothing is listed until the operator approves the EXACT pack + price (every file hash, the listing, the price and its evidence); no price is ever invented; originality is checked before any prompt reaches the model; AI use is disclosed.",
+      "path": "comp-priced-digital-pack/SKILL.md"
+    },
+    {
       "slug": "confirmed-inputs-decision-gate",
       "dir": "confirmed-inputs-decision-gate",
       "name": "confirmed-inputs-decision-gate",
@@ -819,6 +841,13 @@
       "path": "dropship-opportunity-scorer/SKILL.md"
     },
     {
+      "slug": "ebay-marketplace-connector",
+      "dir": "ebay-marketplace-connector",
+      "name": "ebay-marketplace-connector",
+      "description": "The turnkey eBay SELL-side connector for a Worker+D1 commerce build — list a CRM product on eBay, reprice it, handle best offers, ship and refund orders — the LIST/OUTBOUND sibling of the inbound shopify-order-bridge and the clover-connector. Three isolated pieces: (1) OAuth (authorization-code grant) mirroring a Google connector — the operator connects their OWN seller account through eBay's consent screen, the encrypted refresh token lives in the shared `integrations` table, a short-lived access token is minted per call, and a sandbox/production switch lives in settings; it ships INERT until the client id/secret/RuName secrets are set and an agent never sees the credentials. (2) PURE pricing math (no I/O, no env, deterministic so proofs pin exact outputs): list price for a target margin, a FLOOR = cost + fees + minimum margin that a reprice may never cross, a stale-listing step-down repricer, a best-offer accept/counter/decline policy, and a flip estimate from the MEDIAN of owner-supplied sold comps (no comps → no estimate, never invented). (3) a GATED executor — the list side NEVER calls eBay directly; it only ENQUEUES an action row whose stored payload is the EXACT request body, and a separate executor sends it only after a human Approve, re-checking a hard per-action money ceiling at approve time; the only auto path is a best-offer AUTO-ACCEPT at/above both the threshold and the floor when the owner opted in AND the engine is ON. Use WHENEVER a build must \"list on eBay\", \"connect my eBay seller account\", \"reprice eBay listings\", \"auto-handle best offers within my floor\", \"ship/refund eBay orders from my CRM\", or \"source flip candidates with real comps\". It COMPLEMENTS shopify-order-bridge (inbound webhook: sales INTO the CRM) and clover-connector (POS) as the OUTBOUND marketplace leg, commerce-spine (the sovereign catalog it lists from), and governed-mcp-tool-actuator / station-engine-floor (the propose → human-approve → execute cage). Guardrail: nothing reaches eBay without a human Approve; publishing is a SECOND approval and needs the engine ON; \"buy inventory\" is never an automated spend (approval only acknowledges the decision); never list or reprice below the floor; a money ceiling is re-checked at approve time.",
+      "path": "ebay-marketplace-connector/SKILL.md"
+    },
+    {
       "slug": "email-provider-honest-degrade",
       "dir": "email-provider-honest-degrade",
       "name": "email-provider-honest-degrade",
@@ -950,6 +979,13 @@
       "name": "grounded-llm-extraction",
       "description": "Make \"ask a local LLM to pull a fact (a name, an owner, an entity) out of web-search snippets\" actually trustworthy, by refusing any answer the model can't ground. The model returns strict JSON, then a GROUNDING GUARD rejects it unless a load-bearing token of the answer co-occurs, in a real fetched result, with the thing you searched for — so a famous exec grabbed off an unrelated page (the classic false positive) is thrown out because the target's name and the answer never appear together. Layered validators back it up: a placeholder/\"John Doe\" blocklist, a role/entity-suffix noise filter (a person's name never contains \"owner\"/\"LLC\"), an \"answer isn't just the query restated\" check, and a deterministic skip-list for cases the model over-eagerly guesses. It runs on FREE search (keyless DuckDuckGo HTML with rotating browser UAs + jittered backoff and an anomaly cooldown, a local SearXNG as fallback) so neither the search nor the model costs anything, and it falls back to reading the source's OWN page when snippets are too thin. Use WHENEVER a build does \"have the model read these results and tell me X\", \"extract the owner/entity from search\", \"pull a structured fact from web snippets\", \"who is the … for this business\", or any LLM-over-search extraction that must not hallucinate a confident wrong answer. COMPLEMENTS decision-maker-email- extractor (which extracts from a business's OWN site via JSON-LD + regex — this adds the grounding/anti-hallucination + search-rotation layer for extraction over the open WEB), runs behind residential-edge-relay (local model + local/keyless search the edge can't reach), and reads pages via a sovereign headless reader. Guardrail: an ungrounded answer is DROPPED, never returned as a guess; the model names a source URL and the guard proves the claim against fetched text; search is paced to stay a polite, unbanned citizen.",
       "path": "grounded-llm-extraction/SKILL.md"
+    },
+    {
+      "slug": "hands-free-daily-shift",
+      "dir": "hands-free-daily-shift",
+      "name": "hands-free-daily-shift",
+      "description": "A hands-free DAILY SHIFT for a self-running Worker+D1 business: a START/STOP pair that a person (or an assistant, or the cron) presses to put the whole machine to sleep at night and wake it in the morning — SAFELY. A STOP first SNAPSHOTS exactly what was running (active campaigns, armed daemons, the lead-gen schedule) and only then engages the kill switch; the next START restores EXACTLY that snapshot and nothing more — unlike a naive resume, it never silently arms daemons you had turned off or re-activates campaigns you paused. START also REFUSES to override a Stop it didn't make (the owner's kill switch is sacred; only the owner can lift it), and a cron presses the SAME buttons once per local day at the owner's hours with claim-based idempotency that catches up a missed tick. It ships with PII-light morning/evening reports built for a third-party assistant (counts, statuses, task titles with emails/phones/links REDACTED — never notes or messages) and a machine-health read. Use WHENEVER a build should \"run itself during the day and rest at night\", \"start/stop everything with one button\", \"resume exactly how I left it\", \"let my assistant open and close the shop without breaking my settings\", \"a daily on/off schedule\", \"morning brief + evening wrap\", or \"don't let the start button override my kill switch\". It COMPLEMENTS daemon-fleet-switchboard (shift snapshots which daemons were armed and restores them — it does not replace the switchboard or its kill switch) and graduated-autonomy-tiers (the shift is the time-of-day master on/off above the per-stage dials). Guardrail: START never overrides the owner's own Stop; a STOP preserves every queue; the schedule records a refused start once per day and does not retry it.",
+      "path": "hands-free-daily-shift/SKILL.md"
     },
     {
       "slug": "hfp-dialer-companion",
@@ -1162,6 +1198,13 @@
       "path": "overpass-query-hardening/SKILL.md"
     },
     {
+      "slug": "paper-trading-copy-desk",
+      "dir": "paper-trading-copy-desk",
+      "name": "paper-trading-copy-desk",
+      "description": "A PAPER-ONLY (simulated) trading desk that reacts to forecast/signal batches and an ADVISORY typed judge beside it — the \"money-never-auto\" doctrine applied to trading. The desk has NO exchange keys, NO order routing and makes NO network call: it reads forecasts already in D1 and writes simulated fills at the OBSERVED price ± a stated slippage/fee ASSUMPTION, marks open positions ONLY from later REAL observations (never a predicted price), and logs every decision. Risk is enforced IN CODE, not by the model: spot/long only, no leverage, a max position, a max count of open positions, an operator GRANT that is the most ever in play, and a RED LINE sized so that even if every open position went to zero the loss could not pass the max loss — at/past the overall or daily line the desk only CLOSES, never opens, until the next day or an operator re-arm. Paper P&L lives in its own append-only, hash-chained log and NEVER touches the real money ledger; the operator's \"target\" is reported beside results but NO sizing code reads it (no martingale, no size-up after a loss). The judge (a typed choice/probability model) ADVISES open/close/skip and its usage cost is metered truthfully — it never approves a trade, a price or money. Use WHENEVER a build wants to \"shadow/paper trade a strategy\", \"copy trades on forecasts without real money\", \"backtest-forward on live signals\", \"an advisory AI judge with hard caps it can't override\", or \"prove a trading idea with a benchmark but risk nothing\". It COMPLEMENTS truthful-money-ledger (paper P&L is kept OUT of it; only the judge's real cost books in) and confirmed-inputs-decision-gate / governed-operator-console (same \"AI advises, code/human decides\" cage). Guardrail: PAPER ONLY — simulated fills in D1, no keys, no real order; live trading would require the operator to explicitly lift the no-automated-trading line, and the hard caps are code the judge cannot override.",
+      "path": "paper-trading-copy-desk/SKILL.md"
+    },
+    {
       "slug": "parametric-3d-model-builder",
       "dir": "parametric-3d-model-builder",
       "name": "parametric-3d-model-builder",
@@ -1293,6 +1336,13 @@
       "name": "resilient-hero-video-sequence",
       "description": "Play a HERO as a sequence of autoplaying video shots that hard-cut one to the next and can NEVER show a blank box — each clip is layered over the last and revealed only once it is genuinely painting frames, so a failed fetch, a refused autoplay, or a throttled tab at worst rests on whatever was last showing. Pure hand-coded JS, no library/CDN, reduced-motion-safe, and adding a shot is markup (not code). Use WHENEVER a site hero is MULTIPLE video clips rather than one loop or a photo slideshow: \"cycle hero videos\", \"play these clips in sequence in the hero\", \"hero video sequence\", \"hard-cut between shots\", \"hero that never goes black\", \"montage hero\", or a cinematic multi-shot opener. It is a NEW effect atom that COMPLEMENTS web-effects-catalog and is the video counterpart to website-build-standard's default photo hero slideshow (use this once real footage exists). Pairs with site-media-fetch (source the clips) and worker-media-headers (range-serve them). Do NOT add a fade between shots that share no geometry (reads as a smear) and do NOT hide the outgoing clip on a timer (that is exactly how a hero goes blank).",
       "path": "resilient-hero-video-sequence/SKILL.md"
+    },
+    {
+      "slug": "revenue-readiness-report",
+      "dir": "revenue-readiness-report",
+      "name": "revenue-readiness-report",
+      "description": "A read-only \"WHY are the money engines idle?\" diagnostic for a Worker+D1 revenue app, built so an AI operator can answer \"make me money\" by READING it first and then proposing approval-gated actions — it invents nothing and COMPOSES the gates the app already has (revenue kill switch, the daemon switchboard, machine health, deliverability/bounce breaker, Stripe readiness, Google-connected, approval-queue COUNTS, the deployed build id) into a severity-sorted list of plain-language BLOCKERS, each with a concrete FIX and an `operator_only` flag. Hard privacy contract: NO secret values/tokens/PII ever leave — secrets appear only by NAME with a present/absent boolean, queues only as counts, a batch only as its count + manifest hash. It ships with ONE narrow write (`set_daemon`) that flips exactly the admin toggle and refuses to arm a sends/publishes daemon without the operator's explicit go-ahead and refuses to arm ANYTHING while the kill switch is Stopped. Use WHENEVER a build needs \"why isn't anything making money\", \"what's blocking revenue\", \"a readiness check before I turn things on\", \"tell the AI what's wrong and how to fix it, but don't let it see secrets\", \"one status read my assistant can act on\", or a pre-flight gate in front of a governed console. It COMPLEMENTS daemon-fleet-switchboard (it READS that switchboard + wraps its toggle with go-ahead/kill-switch guards — it does not re-implement it), money-feed-health-monitor (that is the money IN/OUT/net read-model; this is the WHY-IDLE blocker read), governed-operator-console / least-privilege-mcp-connector (this is the grounding snapshot the caged AI reads before it proposes). Guardrail: read-only and PII-free; the single write never touches revenue-control state or any approval, and never arms past a stopped kill switch.",
+      "path": "revenue-readiness-report/SKILL.md"
     },
     {
       "slug": "risk-classified-review-queue",
@@ -1477,6 +1527,13 @@
       "path": "ssrf-safe-egress-transport/SKILL.md"
     },
     {
+      "slug": "station-engine-floor",
+      "dir": "station-engine-floor",
+      "name": "station-engine-floor",
+      "description": "The ENGINE FLOOR that sits one layer ABOVE a daemon switchboard: instead of toggling background jobs, it moves work items along named BELTS where each ordered stage is worked by exactly ONE hired \"desk\" that must hold the capability \"gear\" that stage declares, and every gated stage HALTS the item until the operator approves the EXACT bytes (a sha256 of recipient + latest artifacts) — an edit voids any prior approval, and re-reading the new hash is required. One registry of belts (definitions in code, runtime state in D1), one advance() that runs stage-by-stage and stops cleanly at a gate / wait / block / terminal, a per-belt kill switch, an operator-armed capped STANDING OK for inbound-only belts, an advisory pre-screen on every review card, and a hibernating-WebSocket event hub so pages react to runs (events, never polling). Use WHENEVER a build needs \"one money bot per engine\", \"a work conveyor with human approval gates\", \"pipelines where each step is done by a worker that needs a permission\", \"approve the exact thing before it goes out\", \"a station/floor of self-running belts I can watch live\", or to turn a pile of cron daemons into governed, inspectable production lines. It COMPLEMENTS daemon-fleet-switchboard (each belt can BE a daemon; the floor is the orchestration above it), pipeline-autopilot / graduated-autonomy-tiers (per-stage autonomy dials — the gate here is the hardest tier), and confirmed-inputs-decision-gate (that gates a NUMBER; this gates the OUTGOING BYTES). Guardrail: the ONLY way past a gate is an exact-hash approval or an operator-armed standing OK within its daily cap for an inbound item — never an agent, never auto; money/sends still ride their own governed senders.",
+      "path": "station-engine-floor/SKILL.md"
+    },
+    {
       "slug": "svg-marketing-asset-generator",
       "dir": "svg-marketing-asset-generator",
       "name": "svg-marketing-asset-generator",
@@ -1510,6 +1567,13 @@
       "name": "totp-mfa",
       "description": "Self-contained authenticator-app 2FA (RFC 6238 TOTP) for a Cloudflare Worker + D1 app, on Web Crypto ONLY with zero npm deps: a single dependency-free library (base32 encode/decode, HOTP, TOTP, otpauth:// URL, and a constant-time verify with a ±1 step window) plus the enroll → confirm → login-gate → disable flow — where a wrong OR absent code at login counts as a failed attempt toward account lockout so MFA can't be brute-forced, and disabling MFA also requires a current code. EXTENDS cf-identity (adds a second factor to its login) and pairs with cf-abuse-guard (a bad code feeds the same lockout ledger). Use WHENEVER a build needs \"two-factor\", \"2FA\", \"MFA\", \"authenticator app\", \"TOTP\", \"Google Authenticator / Authy support\", \"one-time code\", \"step-up auth\", \"protect the admin account\", or \"require a code at login\". The library file (`totp.mjs`) lifts UNCHANGED into any Worker or Node ≥20 project. Guardrails: enrollment is a two-step commit (secret stored but INACTIVE until one correct code confirms it) so a mis-scanned QR can't lock the user out; a wrong/absent code at login is a lockout-counted failure, never a free retry oracle; the compare is constant-time; store the base32 secret server-side and never return it after enrollment.",
       "path": "totp-mfa/SKILL.md"
+    },
+    {
+      "slug": "truthful-money-ledger",
+      "dir": "truthful-money-ledger",
+      "name": "truthful-money-ledger",
+      "description": "A TRUTHFUL, tamper-evident money ledger for a Worker+D1 build: a hash-chained, append-only P&L line store where REVENUE is written ONLY when a real payment is actually received, COST only when metered / invoiced / entered by a human, SIMULATED (\"paper\") income is NEVER allowed in, corrections are new REVERSING lines (nothing is ever edited or deleted), and every write is idempotent on `(source, source_ref, kind)`. The chain is `hash = sha256(prev_hash | canonical line)`, the head is defended by a compare-and-insert so two writers can never fork it, a `verifyLedger()` recomputes the whole chain and names the first broken line, and SQL triggers RAISE(ABORT) on any UPDATE/DELETE. Use WHENEVER a build must report money it can PROVE — \"a ledger that can't lie\", \"only count revenue when we're actually paid\", \"tamper-evident P&L\", \"append-only financial record with a hash chain\", \"idempotent revenue lines (webhook + poll both fire)\", \"reverse a refund instead of deleting\", \"keep paper/forecast gains out of the real books\", or a per-engine revenue/cost rollup. It COMPLEMENTS append-only-audit-log (that logs WHO-DID-WHAT events; this logs MONEY with a hash chain and revenue/cost semantics), service-invoice-ledger / prepaid-wallet-ledger (per-job invoices / wallet debits — this is the cross-engine truth spine they can book into), and order-pnl-fund-gate-fulfillment / money-feed-health-monitor (which compute/aggregate per-order finance — this is the durable immutable line of record). Guardrail: a revenue line requires basis `payment_received`; \"paper\"/simulated P&L must be kept in its own non-ledger store and can only ever contribute real METERED COST, never revenue.",
+      "path": "truthful-money-ledger/SKILL.md"
     },
     {
       "slug": "two-keystore-password-integrity",
