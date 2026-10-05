@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-05T20:15:12.324Z",
+  "generated": "2026-10-05T23:52:11.354Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 175,
+  "skillCount": 176,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -916,6 +916,13 @@
       "name": "field-encryption-at-rest",
       "description": "The reusable helper for encrypting individual sensitive TEXT columns at rest in a Cloudflare Worker + D1 app with ONE secret and Web Crypto — a reversible AES-GCM `encField(env,text)` / `decField(env,stored)` pair (distinct from a one-way password hash). Bodies/notes/PII are written as `base64(iv):base64(ct)`, read back transparently, degrade to plaintext when no key is set (dev), tolerate legacy/seed plaintext, and on a KEY MISMATCH return a loud \"[unreadable — the key changed. Do not delete this message.]\" instead of on-screen gibberish that gets deleted. Use WHENEVER a build stores free text you would not want readable in a DB dump — \"encrypt messages/notes at rest\", \"encrypt customer PII / phone / email\", \"field-level encryption\", \"AES-GCM in a Worker\", \"don't store chat bodies in plaintext\", \"encryption key for the app\". This is the SHARED helper that several skills say they use but none defines: it COMPLEMENTS cf-identity (which owns the ONE-WAY PBKDF2 password hash — this is the REVERSIBLE field-crypto beside it) and is the \"encrypted at rest\" primitive behind social-dm-inbox (DM bodies), services-delivery-lifecycle (scope/notes), and wire-payment-collect-reconcile (wire instructions). Guardrails: AES-GCM with a fresh 12-byte IV per value; the key is a Worker secret, never in D1, never logged; losing the key means the ciphertext is unrecoverable — say so and never silently destroy it.",
       "path": "field-encryption-at-rest/SKILL.md"
+    },
+    {
+      "slug": "founder-metric-reel",
+      "dir": "founder-metric-reel",
+      "name": "founder-metric-reel",
+      "description": "Make founder-led technical explainer reels in the Reflex format: big-metric hook, founder breaks down HOW at a high level on camera, cost pain-point bridge, engagement-question CTA. Trigger when Robbie wants a reel that explains a Solomon capability through a real number.",
+      "path": "founder-metric-reel/SKILL.md"
     },
     {
       "slug": "geo-directory-prospecting",
