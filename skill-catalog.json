@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-01T08:52:04.463Z",
+  "generated": "2026-10-05T20:15:12.324Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 173,
+  "skillCount": 175,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -496,6 +496,20 @@
       "name": "agnostic-import-parser",
       "description": "Client-side \"upload your existing list\" intake for any CRM/portal/list-builder — auto-detects and parses CSV / TSV / semicolon / JSON in the browser (BOM-stripped, delimiter sniffed by header counts, quote-aware), shows a header + preview table, then POSTs the rows to a server ingest that case-insensitively auto-matches columns (name/email/phone/company…) and de-dupes by email. Use WHENEVER a build needs \"import my existing customers/investors/leads\", \"upload a spreadsheet\", \"bring in my list\", \"onboard from a CSV/Excel export\", \"paste in JSON\", or a bulk \"add records from a file\" step. EXTENDS crm-build-standard (the record store it feeds) and pairs with cf-forms; the parser is pure/portable — only the final POST target and the server's record kinds are app-specific. Guardrails: 4 MB client guard + a server row cap (structured import only — binary/ unstructured files degrade honestly to \"store it as a file feed\", see chunked-uploader / data-feed-intake); de-dupe by email, never overwrite; imported accounts get an UNUSABLE password until separately invited (never a real login on import).",
       "path": "agnostic-import-parser/SKILL.md"
+    },
+    {
+      "slug": "ai-search-ranking",
+      "dir": "ai-search-ranking",
+      "name": "ai-search-ranking",
+      "description": "Build a website engineered to rank in AI search engines (ChatGPT, Google Gemini, AI Overviews). Keyword-map → one page per keyword → FAQ templates → AI-readable schema method. Trigger on any new site or site rebuild where Robbie wants AI-search visibility.",
+      "path": "ai-search-ranking/SKILL.md"
+    },
+    {
+      "slug": "app-remake-belt",
+      "dir": "app-remake-belt",
+      "name": "app-remake-belt",
+      "description": "Run Solomon's 11-agent remake belt to absorb a tool's capability as a Solomon-native function: clean-room behavior spec, architecture, design, build, QA, review-mining for the original's unsolved problems, governed ship. Trigger when Robbie wants Solomon to remake a capability he saw in a demo, reel, or article.",
+      "path": "app-remake-belt/SKILL.md"
     },
     {
       "slug": "append-only-audit-log",
