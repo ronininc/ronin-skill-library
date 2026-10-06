@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-06T07:37:42.380Z",
+  "generated": "2026-10-06T08:26:09.970Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 181,
+  "skillCount": 182,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -1724,6 +1724,13 @@
       "name": "white-label-branding",
       "description": "Instance-wide reskin of a CSS-var-tokened app with NO rebuild and NO redeploy: three brand colors (primary / accent / background, plus a derived gradient) + a portal name + an uploaded logo, persisted server-side in a tiny app_settings key/value table, applied at runtime by overriding a handful of CSS custom properties on <html>, and swapped on BOTH the header crest AND the login card — the login screen themes BEFORE auth because it reads a PUBLIC settings endpoint. Includes a live-preview admin settings modal (color pickers update the page as you drag, logo upload with a size guard, name override, reset-to-default). Use WHENEVER a build must be re-skinnable per client / tenant / partner without a code change — trigger on \"white-label it\", \"let the client pick their colors / upload their logo\", \"partner branding\", \"rebrand per customer\", \"make the portal theme editable\", \"change the accent color from an admin panel\", or productizing one portal resold to many merchants. EXTENDS portal-design-system (it overrides that token system's --blue/--cyan/--ink) and pairs with cf-identity (admin-gated write) + vanilla-spa-shell (calls loadBranding() on boot). Guardrails: colors are hex-validated and the logo is a size-capped image data-URI, both server-side; the read endpoint is public but the write is admin-only; live preview is discarded on modal close unless saved.",
       "path": "white-label-branding/SKILL.md"
+    },
+    {
+      "slug": "wholesale-close-playbook",
+      "dir": "wholesale-close-playbook",
+      "name": "wholesale-close-playbook",
+      "description": "The knowledge base a wholesaling agent closes from: what today's top real-estate wholesaling creators teach (Brent Daniels, Jamil Damji, Pace Morby, Jerry Norton, Max Maxwell, Tom Krol, Todd Toback, Sharad Mehta, Ryan Dossey, David Olds), distilled into a pipeline playbook, a READY-TO-CONTRACT checklist, failure modes with fixes, the state wholesaling laws and TCPA rules to gate on, and the contract terms and software guardrails that keep the owner out of debt. Use WHENEVER an agent qualifies a motivated seller, decides a lead is ready for a contract, sends or prepares a purchase/assignment contract, picks the next approach after a failed close, or checks whether a state allows the deal. Research of 2026-10-06 from search text only: every legal row is UNVERIFIED until the owner's attorney confirms it; not legal advice.",
+      "path": "wholesale-close-playbook/SKILL.md"
     },
     {
       "slug": "wire-payment-collect-reconcile",
