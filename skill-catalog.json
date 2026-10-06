@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-05T20:15:12.324Z",
+  "generated": "2026-10-06T01:02:53.505Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 175,
+  "skillCount": 179,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -470,11 +470,7 @@
     "Branding + deploy + walkthrough.",
     "skill-harvest — run it at the end; any net-new capability re-enters the library and this index."
   ],
-  "orphanReferences": [
-    "site-media-fetch",
-    "spanish-regional-localization",
-    "website-build-standard"
-  ],
+  "orphanReferences": [],
   "skills": [
     {
       "slug": "aaa-render-sources",
@@ -916,6 +912,13 @@
       "name": "field-encryption-at-rest",
       "description": "The reusable helper for encrypting individual sensitive TEXT columns at rest in a Cloudflare Worker + D1 app with ONE secret and Web Crypto — a reversible AES-GCM `encField(env,text)` / `decField(env,stored)` pair (distinct from a one-way password hash). Bodies/notes/PII are written as `base64(iv):base64(ct)`, read back transparently, degrade to plaintext when no key is set (dev), tolerate legacy/seed plaintext, and on a KEY MISMATCH return a loud \"[unreadable — the key changed. Do not delete this message.]\" instead of on-screen gibberish that gets deleted. Use WHENEVER a build stores free text you would not want readable in a DB dump — \"encrypt messages/notes at rest\", \"encrypt customer PII / phone / email\", \"field-level encryption\", \"AES-GCM in a Worker\", \"don't store chat bodies in plaintext\", \"encryption key for the app\". This is the SHARED helper that several skills say they use but none defines: it COMPLEMENTS cf-identity (which owns the ONE-WAY PBKDF2 password hash — this is the REVERSIBLE field-crypto beside it) and is the \"encrypted at rest\" primitive behind social-dm-inbox (DM bodies), services-delivery-lifecycle (scope/notes), and wire-payment-collect-reconcile (wire instructions). Guardrails: AES-GCM with a fresh 12-byte IV per value; the key is a Worker secret, never in D1, never logged; losing the key means the ciphertext is unrecoverable — say so and never silently destroy it.",
       "path": "field-encryption-at-rest/SKILL.md"
+    },
+    {
+      "slug": "founder-metric-reel",
+      "dir": "founder-metric-reel",
+      "name": "founder-metric-reel",
+      "description": "Make founder-led technical explainer reels in the Reflex format: big-metric hook, founder breaks down HOW at a high level on camera, cost pain-point bridge, engagement-question CTA. Trigger when Robbie wants a reel that explains a Solomon capability through a real number.",
+      "path": "founder-metric-reel/SKILL.md"
     },
     {
       "slug": "geo-directory-prospecting",
@@ -1478,6 +1481,13 @@
       "path": "single-source-data-embed/SKILL.md"
     },
     {
+      "slug": "site-media-fetch",
+      "dir": "site-media-fetch",
+      "name": "site-media-fetch",
+      "description": "The house media-harvest engine — finds and downloads a business's REAL videos (and audio, thumbnails, posters) from their public social profiles using yt-dlp, then preps them as web-ready files for a site build. Use WHENEVER a client/prospect site needs real footage: \"grab their videos\", \"pull the reels from their Instagram/TikTok/Facebook/YouTube\", \"download their video for the hero\", \"get real media for the site\", \"find their videos and bring them in\", or any time website-build-standard / custom-lead-generator / the agnostic lead engine reaches a shop whose hero or gallery slots are empty. Downloads only public media; the goal is owned/authorized footage for the business's OWN site. Never fabricates media — if a profile has no usable video, mark the slot CLIENT-UPLOAD. Pairs with profiler + business-profile-recon (to locate the right profiles first) and hands finished files to website-build-standard.",
+      "path": "site-media-fetch/SKILL.md"
+    },
+    {
       "slug": "skill-harvest",
       "dir": "skill-harvest",
       "name": "skill-harvest",
@@ -1511,6 +1521,13 @@
       "name": "sovereign-store-zip-writer",
       "description": "Build a real, standards-correct .zip archive from many in-memory files INSIDE a Cloudflare Worker (or any pure-JS runtime) with ZERO dependencies — no npm zip lib, no supply-chain surface, no native module. Uses the ZIP STORE method (no compression): correct local file headers + central directory + end-of-central-directory records + a hand-rolled IEEE CRC32, so the output opens in `unzip`, macOS Finder and Windows Explorer unchanged. One pure function makeZip(entries, when) -> Uint8Array turns a list of {name, data:Uint8Array} into a single downloadable/streamable buffer. Use WHENEVER a build must hand back MANY files as one archive from the edge: \"back up the CRM / their records\", \"let me download everything\", \"we're near the R2 limit — export before we purge\", \"purge old uploads safely\", \"bundle these attachments + a manifest into one zip\", \"give them a portable export they can re-import\", or \"generate a zip in the Worker without adding a dependency\". COMPLEMENTS export-before-delete-reclaim (that skill owns the build-archive-BEFORE-any-delete choreography, per-run byte cap and manifest — THIS skill is only the byte-exact writer it calls), chunked-uploader (the ingest side: many chunks IN to D1/R2 — this is the bundle side: many files OUT as one archive), and drive-rich-doc-generator (a single Google-native Doc/Sheet from inline text — this is a portable multi-file .zip that needs no SaaS to open). Guardrails: STORE only — it does NOT compress (perfect for already-compressed media / gzip, wasteful for large plain text); the whole archive is assembled in ONE Uint8Array in isolate memory, so cap total bytes per run (well under the ~128 MB Worker ceiling) and paginate big jobs; no ZIP64, so a single archive and any one entry must stay under 4 GB. Patterns/contracts only — genericize every field; never copy client names or data.",
       "path": "sovereign-store-zip-writer/SKILL.md"
+    },
+    {
+      "slug": "spanish-regional-localization",
+      "dir": "spanish-regional-localization",
+      "name": "spanish-regional-localization",
+      "description": "Produce Spanish website/marketing copy that sounds like a native speaker from the SPECIFIC country/region tied to the business, not generic textbook or \"neutral\" Spanish. Use this WHENEVER writing, translating, or reviewing Spanish (ES) copy for a client site, menu, ad, or social post — always, even if the user just says \"translate this to Spanish\" or \"make it bilingual.\" Trigger hard on restaurant/food-business sites, since cuisine almost always signals the culture (Cuban, Colombian, Venezolano, Puerto Rican, Dominican, Argentine, and Mexican-regional — Sinaloa/Sonora vs. Chihuahua vs. CDMX vs. Yucatán all differ). Also trigger for non-restaurant clients once national/regional origin is known. Do NOT skip this for \"simple\" translations — the whole point of this skill is that grammatically-correct Spanish that ignores regional colloquialisms reads as foreign/stilted to the target audience, which is exactly the failure mode this skill exists to prevent.",
+      "path": "spanish-regional-localization/SKILL.md"
     },
     {
       "slug": "spec-contract-scaffold-pipeline",
@@ -1672,6 +1689,13 @@
       "name": "webgpu-image-finish-pass",
       "description": "A sovereign, client-side WebGPU image-finish / filter lane: give any image in the browser a cinematic \"finish\" by running a STACK of hand-authored WGSL fragment effects over it — vignette, soft glow, teal–orange grade, film grain, chromatic aberration, gaussian blur, radial depth-of-field, ACES filmic tonemap, exposure/contrast/saturation, unsharp mask — each dialable via tunable uniforms, composed in order, rendered on the GPU with NO server, NO diffusion weights, and NO external shader library. Use WHENEVER a build needs to post-process or grade an image/photo/canvas in-page: \"make the hero photo look cinematic\", \"add a filter / grade / vignette / glow / grain\", \"clean up / sharpen an uploaded photo\", \"tilt-shift / depth-of-field a product shot\", \"let visitors tune a look with sliders\", \"finish this frame before we show it\". COMPLEMENTS website-build-standard (finish a hero/gallery image), webgl-product-turntable-studio and immersive-evidence-workspace (a post pass over the rendered canvas), svg-marketing-asset-generator (grade a rasterized promo), and media-generation-dispatch (a finishing stage after an engine returns a raster). Do NOT use it to GENERATE an image (that is a diffusion engine), to route between engines (that is media-generation-dispatch), or for CSS/JS motion (that is web-effects-catalog) — this is the pixel-level GPU finish only.",
       "path": "webgpu-image-finish-pass/SKILL.md"
+    },
+    {
+      "slug": "website-build-standard",
+      "dir": "website-build-standard",
+      "name": "website-build-standard",
+      "description": "The house standard for building client/team websites. Use this WHENEVER building, redesigning, or drafting a website, landing page, microsite, one-pager, or marketing site — even if the user doesn't name the standard or these features. Trigger on \"build a site\", \"make a website / landing page\", \"spin up a page for [client]\", \"client one-pager\", \"make them a web page\", or any request whose deliverable is a hosted web page. Encodes the defaults every site ships with: an immersive, physically-explorable centerpiece (with a 2D standard-mode fallback), static Cloudflare-ready deploy, a builder-only drag-and-drop media editor (photo or MP4 per slot), a cinematic hero slideshow of the client's best photos as the default hero (until drone footage exists), click-to-zoom inspector, scalable SVG logos, a payment-ready shop, a per-site inquiry-routing destination, and a group/community link. Do NOT use for editing a non-web document, a slide deck, a spreadsheet, or backend/API work with no web page.",
+      "path": "website-build-standard/SKILL.md"
     },
     {
       "slug": "website-need-scorer",
