@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-06T04:09:37.264Z",
+  "generated": "2026-10-06T07:37:42.380Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 180,
+  "skillCount": 181,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -1500,6 +1500,13 @@
       "name": "skill-harvest",
       "description": "Extract every reusable, sellable capability out of a finished build (or a whole portfolio of repos) into standalone SKILL.md files in the Ronin skill library — the repeatable strip→diff→author→verify pipeline, so each build auto-contributes and you never hand-grind it again. Use WHENEVER a build ships or you want to mine code into skills: \"harvest skills from this\", \"strip this repo/build into skills\", \"extract the reusable IP\", \"add this build to the library\", \"run the harvest\", \"capture what we built\", \"turn my builds into a mix-and-match inventory\", or as the CLOSING step of any build. Works on one repo or every repo you own. EFFICIENT BY DESIGN — it triages first (a repo that's merely an instance of an existing skill contributes nothing) and only deep-strips repos with genuinely net-new capability, always deduped against the current library so it never re-authors what you already have. Patterns/techniques only — never client data. Pairs with the composition index (recipes) it keeps up to date.",
       "path": "skill-harvest/SKILL.md"
+    },
+    {
+      "slug": "skill-matchmaker",
+      "dir": "skill-matchmaker",
+      "name": "skill-matchmaker",
+      "description": "Inventory a codebase (languages, frameworks, APIs, external services, engines) and match that inventory against the installed skill index and public skill marketplaces, then report what is missing, what is duplicated, and which candidates pass a license check. Use when pointed at a repo and asked what skills it needs, when auditing the skill index for gaps or duplicates, or before authoring a new skill (\"does one already exist?\"). Reports only; never installs anything without an explicit yes.",
+      "path": "skill-matchmaker/SKILL.md"
     },
     {
       "slug": "social-dm-inbox",
