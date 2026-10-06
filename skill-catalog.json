@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-06T01:02:53.505Z",
+  "generated": "2026-10-06T04:09:37.264Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 179,
+  "skillCount": 180,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -1171,6 +1171,13 @@
       "name": "open-data-signal-discovery",
       "description": "A government/open-data ingestion spine that surfaces FRESH buying signals — a new business license, a pulled building permit, a just-formed entity — before anyone cold-calls the business. A reviewed Socrata source catalog drives a cursored, keyset-paginated SoQL puller (every identifier in the query comes ONLY from the allowlist, never from a request — injection-safe), plus an R2 NDJSON bulk path for datasets a Worker can't fetch directly (Overture/Foursquare/ROC), all upserting into a businesses + time-stamped signals model deduped by a SHA-256 place-key. Use WHENEVER a lead-gen CRM should \"find new/just-opened businesses\", \"watch permits/licenses/entity formations\", \"ingest city open data\", \"Socrata / data.gov feeds\", \"surface buying-signal leads\", or \"who just got a permit\". COMPLEMENTS crm-build-standard (the CRM the signals feed) and data-feed-intake (generic feed plumbing) — this is the open-data-specific catalog + SoQL cursor + place-key dedup on top; and it pairs with geo-directory-prospecting (map-sourced prospects) as a second, event-driven source lane. CRITICAL CAVEAT — this ships COMPLETE and migration-backed but DISCONNECTED from cron/router in the source (index.ts:183-185); the skill body includes the exact bindings, routes and cron wiring it needs. Injection-safety (allowlist-only identifiers) is the load-bearing guardrail — never relax it.",
       "path": "open-data-signal-discovery/SKILL.md"
+    },
+    {
+      "slug": "open-harness",
+      "dir": "open-harness",
+      "name": "open-harness",
+      "description": "Run routine coding and agent work on free/open models through a local MIT-licensed harness (Hermes Agent, OpenCode) under Solomon's governance — own the weights, keep data private, demote Claude/Codex to hard tasks only. Trigger when Robbie wants $0 coding capacity or a Claude-independent execution path.",
+      "path": "open-harness/SKILL.md"
     },
     {
       "slug": "opportunity-markets-bid-desk",
