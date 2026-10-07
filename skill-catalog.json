@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-06T08:26:09.970Z",
+  "generated": "2026-10-07T01:15:43.259Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 182,
+  "skillCount": 183,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -1633,6 +1633,13 @@
       "name": "universal-i18n-runtime",
       "description": "The runtime translation ENGINE for any client site/app that must serve visitors in their own language — a region-agnostic, provider-free i18n core: one supported-language registry, a language-name + locale alias resolver (`en-US`/`Spanish`/`es-MX`/`Chinese` → base code), a deterministic auto-detector that picks a visitor's language from raw text using Unicode SCRIPT ranges (CJK, Cyrillic, Arabic, Hebrew, Thai, Devanagari, Bengali, Tamil, Telugu…) plus Latin-script signal-word heuristics — with NO cloud/LLM call — and an RTL flag + per-locale string dictionaries on top. Use WHENEVER a build needs \"detect the visitor's language\", \"make the site multilingual / bilingual\", \"auto-switch to Spanish/Arabic/etc.\", \"let people pick a locale\", \"support any language\", \"right-to-left support\", \"translate the UI strings\", or \"figure out what language this text is in\" — for a website, landing page, portal, menu, form, or small tool. COMPLEMENTS spanish-regional-localization: that skill decides the copy STYLE (how a Cuban vs. Sinaloan reads); THIS skill is the runtime plumbing that decides WHICH language to serve and swaps the strings. Pairs with website-build-standard / crm-build-standard (the pages it localizes) and cf-forms. Pure and portable — no dependency on a decision/response object, no network. Do NOT use it to author the translated copy itself (that's a human/LLM step, gated), and never let auto-detect silently pick a language for anything money- or contract-bearing without an explicit visitor confirmation.",
       "path": "universal-i18n-runtime/SKILL.md"
+    },
+    {
+      "slug": "universal-modder",
+      "dir": "universal-modder",
+      "name": "universal-modder",
+      "description": "Mod a PC game the operator owns, from the idea to working in the real game and recorded — new items, weapons, enemies, bosses, units, mechanics, art, sound and cross-game mashups. Routes to the universal-modder skills - game recon, reverse engineering (ILSpy, Cpp2IL, Ghidra), fal-generated sprites, textures, 3D, SFX and music, the asset pipeline into engine-exact frames, driving the game to test, showcase videos, publishing to Nexus/Workshop/Thunderstore, and the shared modding knowledge base. Use when the operator wants to mod, extend, reverse engineer, port into or mash up a game, asks \"can this game be modded\", or wants a mod packaged or shown off. Single-player, offline or self-hosted only; never anti-cheat, DRM or cheats against other players.",
+      "path": "universal-modder/SKILL.md"
     },
     {
       "slug": "untrusted-preview-sandbox",
