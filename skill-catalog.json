@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-07T01:15:43.259Z",
+  "generated": "2026-10-11T01:35:41.433Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 183,
+  "skillCount": 184,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -272,7 +272,8 @@
         "buy-box-matcher",
         "az-cash-buyer-finder",
         "valuation-pof-engine",
-        "county-records-comps-arv"
+        "county-records-comps-arv",
+        "assignment-contract-review"
       ]
     },
     {
@@ -513,6 +514,13 @@
       "name": "append-only-audit-log",
       "description": "One failure-tolerant `audit(env, userId, action, detail)` helper that writes an immutable audit_log row (id, ts, user_id, action, detail), wrapped in a try/catch that only console.errors so a logging failure can NEVER break the request it records — then called after every privileged action across the app (login, logout, lockout, invite, accept-invite, password change/reset, MFA enable/disable, role/clearance change, signup approval/rejection, token mint/revoke, settings change, connector connect/disconnect, record create/update). The result is a single immutable compliance trail on plain D1, no external logging service. Use WHENEVER a build needs \"an audit trail\", \"activity log\", \"who did what and when\", \"compliance log\", \"log every privileged action\", \"immutable record of changes\", \"security event log\", or \"track admin actions\". Backend on a Cloudflare Worker + D1. EXTENDS cf-identity (logs its auth events) and pairs with feature-activation-gate (log every flip), google-oauth-connector (log connect/disconnect), and any admin mutation. Guardrails: the write is fire-and-forget-safe (awaited for ordering, but its error is swallowed) so auditing never fails a request; append-only by DISCIPLINE — never add an UPDATE/DELETE route to audit_log; detail is bounded (~500 chars) and must NEVER contain secrets/passwords/tokens (mask them); user_id is a plain nullable TEXT column (not a FK) so a deleted user still leaves a trail; use 'system' for cron/webhook actors and null for pre-identity events (a failed login of an unknown email); log FAILURES too, not just successes.",
       "path": "append-only-audit-log/SKILL.md"
+    },
+    {
+      "slug": "assignment-contract-review",
+      "dir": "assignment-contract-review",
+      "name": "assignment-contract-review",
+      "description": "Review (or draft-check) an ASSIGNMENT / flip contract where Ronin locks an asset at one price and assigns the contract to an end buyer for a spread — vehicles first (car-flip / Ronin Flipper deals), real-estate wholesale assignments second. Gives a fixed playbook (standard / fallback / escalate per clause), a RED-first triage (licensing gate → enforceability → closing mechanics), and a ready-to-insert redline library (consideration, closing mechanics, seller-breach remedy, access + test drives, release on assignment, risk of loss). Use WHENEVER someone drafts, pastes, or asks to review a \"vehicle assignment agreement\", \"assignment contract\", \"purchase-and-assign\", \"wholesale contract\", \"flip contract\", \"option to buy and assign\", a Muse/Solomon-drafted deal contract, or asks \"is this contract safe to send to a seller\". Serves as the PLAYBOOK for `legal:review-contract` (which otherwise falls back to generic standards) and COMPLEMENTS `wholesale-real-estate` (sourcing → assignment & close) and the car-flip engine. STATUS: NOT ATTORNEY-REVIEWED — authored by Claude from one generic review; every output must carry that banner and route to a licensed Arizona attorney before signing.",
+      "path": "assignment-contract-review/SKILL.md"
     },
     {
       "slug": "attack-list-priority-queue",
