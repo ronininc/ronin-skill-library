@@ -28,7 +28,8 @@ test('smooth scroll: native scrolling unless every condition holds', () => {
   const ok = { reducedMotion: false, siteType: 'marketing', Lenis: function () {}, scrollHeight: 3000, viewportHeight: 800 };
   assert.equal(smooth.decide(ok), null);
   assert.equal(smooth.decide({ ...ok, reducedMotion: true }), 'reduced-motion');
-  assert.equal(smooth.decide({ ...ok, siteType: 'admin' }), 'app-or-admin');
+  assert.equal(smooth.decide({ ...ok, siteType: 'admin' }), 'not-a-marketing-or-content-site');
+  assert.equal(smooth.decide({ ...ok, siteType: undefined }), 'not-a-marketing-or-content-site', 'unknown site type is native scroll');
   assert.equal(smooth.decide({ ...ok, scrollHeight: 820 }), 'fits-one-viewport');
   assert.equal(smooth.decide({ ...ok, Lenis: undefined }), 'lenis-not-vendored');
 });

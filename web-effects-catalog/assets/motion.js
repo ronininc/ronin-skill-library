@@ -22,7 +22,8 @@
   function stagger() {
     var groups = document.querySelectorAll('[data-reveal-stagger]');
     Array.prototype.forEach.call(groups, function (g) {
-      var step = Math.max(0, Math.min(400, parseInt(g.getAttribute('data-reveal-stagger'), 10) || 80));
+      var raw = parseInt(g.getAttribute('data-reveal-stagger'), 10);
+      var step = Math.max(0, Math.min(400, isNaN(raw) ? 80 : raw)); // 0 is a valid choice
       var kids = g.querySelectorAll('.reveal');
       Array.prototype.forEach.call(kids, function (el, i) {
         // An explicit data-reveal-delay wins; reduced motion gets no delay at all.
@@ -31,36 +32,51 @@
     });
   }
 
-  var layers = [], ticking = false, onScreen = new Set(), pio = null;
+  var layers = [], ticking = false, onScreen = new Set(), pio = null, listening = false;
+  function offsetOf(el) { return parseFloat(el.getAttribute('data-parallax-y')) || 0; }
   function paint() {
     ticking = false;
+    if (!motionOK()) return;
     var vh = window.innerHeight || 1;
     onScreen.forEach(function (el) {
+      if (!el.isConnected) { onScreen.delete(el); return; }
       var r = el.getBoundingClientRect();
       var speed = Math.max(-1, Math.min(1, parseFloat(el.getAttribute('data-parallax')) || 0));
-      // Offset is 0 when the element is centred in the viewport, so the resting layout is the authored one.
-      var centre = r.top + r.height / 2 - vh / 2;
-      el.style.transform = 'translate3d(0,' + (-centre * speed).toFixed(1) + 'px,0)';
+      // Measure the UNtransformed position (rect minus the offset we applied), so the offset never feeds back.
+      var centre = (r.top - offsetOf(el)) + r.height / 2 - vh / 2;
+      var y = Math.round(-centre * speed * 10) / 10;
+      el.setAttribute('data-parallax-y', String(y));
+      el.style.transform = 'translate3d(0,' + y + 'px,0)';
     });
   }
   function onScroll() { if (!ticking) { ticking = true; window.requestAnimationFrame(paint); } }
+  function stopParallax() {
+    if (pio) { pio.disconnect(); pio = null; }
+    onScreen.clear();
+    layers.forEach(function (el) { el.style.transform = ''; el.style.willChange = ''; el.removeAttribute('data-parallax-y'); });
+  }
   function parallax() {
+    stopParallax();
     layers = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
-    if (!layers.length || !motionOK()) { layers.forEach(function (el) { el.style.transform = ''; }); return; }
-    if (pio) pio.disconnect();
+    if (!layers.length || !motionOK()) return;
     pio = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { if (e.isIntersecting) onScreen.add(e.target); else onScreen.delete(e.target); });
       onScroll();
     }, { rootMargin: '10% 0px' });
     layers.forEach(function (el) { el.style.willChange = 'transform'; pio.observe(el); });
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    if (!listening) { // once per page, however often refresh() runs
+      listening = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    }
   }
 
-  function format(n, el) {
+  function decimalsOf(s) { var m = String(s).match(/\.(\d+)/); return m ? m[1].length : 0; }
+  function format(n, el, decimals) {
     var lang = el.getAttribute('lang') || document.documentElement.lang || undefined;
-    try { return new Intl.NumberFormat(lang).format(n); } catch (e) { return String(n); }
+    try { return new Intl.NumberFormat(lang, { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(n); } catch (e) { return n.toFixed(decimals); }
   }
+  var counting = [];
   function countUp() {
     var els = Array.prototype.slice.call(document.querySelectorAll('[data-count-to]:not([data-count-done])'));
     if (!els.length || !motionOK()) return; // the real final value is already in the text
@@ -68,18 +84,29 @@
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
         obs.unobserve(e.target);
-        var el = e.target, to = parseFloat(el.getAttribute('data-count-to'));
+        var el = e.target, raw = el.getAttribute('data-count-to'), to = parseFloat(raw);
         if (!isFinite(to)) return;
         var ms = Math.max(200, Math.min(4000, parseInt(el.getAttribute('data-count-ms'), 10) || 1200));
-        var finalText = el.textContent, start = null;
+        var finalText = el.textContent, start = null, decimals = decimalsOf(raw);
         el.setAttribute('data-count-done', '');
-        el.setAttribute('aria-label', finalText); // screen readers hear the real value, not the ticking digits
+        // Screen readers get the real value from a visually hidden copy; the ticking digits are hidden from them.
+        var live = document.createElement('span');
+        live.textContent = finalText;
+        live.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap';
+        var tick = document.createElement('span');
+        tick.setAttribute('aria-hidden', 'true');
+        el.textContent = ''; el.appendChild(tick); el.appendChild(live);
+        var job = { done: false };
+        counting.push(job);
+        function finish() { job.done = true; el.textContent = finalText; }
         function frame(t) {
+          if (job.done) return;
+          if (!motionOK()) { finish(); return; }
           if (start === null) start = t;
           var p = Math.min(1, (t - start) / ms), eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = p < 1 ? format(Math.round(to * eased), el) : finalText;
-          if (p < 1) window.requestAnimationFrame(frame);
+          if (p < 1) { tick.textContent = format(to * eased, el, decimals); window.requestAnimationFrame(frame); } else finish();
         }
+        job.finish = finish;
         window.requestAnimationFrame(frame);
       });
     }, { threshold: 0.6 });
@@ -88,7 +115,12 @@
 
   function refresh() { stagger(); parallax(); countUp(); }
   window.RoninMotion = { refresh: refresh };
-  if (RM.addEventListener) RM.addEventListener('change', function () { if (RM.matches) layers.forEach(function (el) { el.style.transform = ''; }); });
+  // Turning reduced motion on mid-visit stops everything now: parallax is removed, counters jump to their value.
+  if (RM.addEventListener) RM.addEventListener('change', function () {
+    if (!RM.matches) return;
+    stopParallax();
+    counting.forEach(function (job) { if (!job.done && job.finish) job.finish(); });
+  });
   if (document.readyState !== 'loading') refresh();
   else document.addEventListener('DOMContentLoaded', refresh);
 })();
