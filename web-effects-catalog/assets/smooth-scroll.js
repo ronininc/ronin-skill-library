@@ -12,10 +12,11 @@
        <script>RoninSmoothScroll.init({ siteType: 'marketing' });</script>
 */
 (function (root) {
-  var APP_TYPES = ['app', 'admin', 'dashboard', 'tool', 'portal'];
+  // Opt-in only: smooth scroll runs for site types explicitly named here; anything else (app, admin, unknown) is native.
+  var SMOOTH_TYPES = ['marketing', 'content', 'landing', 'editorial', 'portfolio'];
   function decide(o) {
     if (o.reducedMotion) return 'reduced-motion';
-    if (APP_TYPES.indexOf(String(o.siteType || '').toLowerCase()) !== -1) return 'app-or-admin';
+    if (SMOOTH_TYPES.indexOf(String(o.siteType || '').toLowerCase()) === -1) return 'not-a-marketing-or-content-site';
     if (!(o.scrollHeight > o.viewportHeight * 1.05)) return 'fits-one-viewport';
     if (typeof o.Lenis !== 'function') return 'lenis-not-vendored';
     return null;
@@ -32,9 +33,14 @@
       });
       if (why) { api.skipped = why; return null; }
       var lenis = new w.Lenis({ lerp: typeof opts.lerp === 'number' ? opts.lerp : 0.1, smoothWheel: opts.smoothWheel !== false });
-      function raf(t) { lenis.raf(t); w.requestAnimationFrame(raf); }
+      var running = true;
+      function raf(t) { if (!running) return; lenis.raf(t); w.requestAnimationFrame(raf); }
       w.requestAnimationFrame(raf);
       api.instance = lenis;
+      api.destroy = function () { running = false; if (lenis.destroy) lenis.destroy(); api.instance = null; };
+      // Reduced motion turned on later: back to native scrolling immediately.
+      var rm = w.matchMedia && w.matchMedia('(prefers-reduced-motion: reduce)');
+      if (rm && rm.addEventListener) rm.addEventListener('change', function () { if (rm.matches) api.destroy(); });
       return lenis;
     },
   };
