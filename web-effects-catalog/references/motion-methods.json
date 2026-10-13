@@ -1,0 +1,51 @@
+{
+  "schema": "ronin.motion-method/v1",
+  "license_rule": "Vendored third-party code must be MIT or Apache-2.0. Checked 2026-10-13 against each project's own repo/package, not a summary's claim.",
+  "methods": [
+    {
+      "name": "scroll-animation",
+      "replaces": "gsap-animation",
+      "description": "Scroll reveals, staggers, parallax and counters from house atoms: reveal.js (entrances), motion.js (stagger, parallax, count-up). Content is visible by default; reduced motion renders static.",
+      "triggers": ["reveal on scroll", "stagger these cards", "parallax hero", "count up the stats", "animate as you scroll", "gsap"],
+      "inputs": { "target_elements": "CSS selector or markup marked .reveal / data-parallax / data-count-to", "animation_type": "up | down | left | right | zoom | fade | stagger | parallax | count-up", "scroll_trigger": "IntersectionObserver threshold (default 0.12 reveals, 0.6 counters)" },
+      "outputs": "markup attributes plus assets/reveal.{js,css} and assets/motion.js, vendored into the site's /assets",
+      "cost": "light",
+      "source_reference": "https://gsap.com/docs/v3/ (studied for scope only; no GSAP code used)",
+      "license": { "spdx": "house (own code)", "note": "GSAP npm 3.15.0 declares \"Standard 'no charge' license: https://gsap.com/standard-license\", which is not MIT/Apache-2.0, so GSAP is not vendored. Using GSAP itself needs an owner decision." },
+      "status": "shipped"
+    },
+    {
+      "name": "lenis-smooth-scroll",
+      "description": "Optional smooth scrolling for marketing/content sites longer than one viewport. Default off for app/admin/dashboard/tool/portal; off under prefers-reduced-motion; native scroll whenever Lenis is not vendored.",
+      "triggers": ["smooth scroll", "buttery scrolling", "lenis"],
+      "inputs": { "lerp": 0.1, "smooth_wheel": true, "site_type": "marketing | content | app | admin | dashboard" },
+      "outputs": "an initialized Lenis instance driven by requestAnimationFrame (assets/smooth-scroll.js), or null with a recorded reason",
+      "cost": "light",
+      "source_reference": "https://github.com/darkroomengineering/lenis",
+      "license": { "spdx": "MIT", "note": "GitHub license API: MIT (repo pushed 2026-10-02). Vendor the exact pinned dist file; the wrapper never fetches it." },
+      "status": "shipped-wrapper; lenis dist not yet vendored (a pinned download needs approval per site)"
+    },
+    {
+      "name": "react-bits-components",
+      "description": "Animated hero/text/background/button components adapted to design tokens.",
+      "triggers": ["react bits", "animated hero component", "animated text", "animated background"],
+      "inputs": { "component_name": "string", "design_tokens": "brand colours, radii, type scale" },
+      "outputs": "adapted component code",
+      "cost": "light",
+      "source_reference": "https://github.com/DavidHDev/react-bits",
+      "license": { "spdx": "NOASSERTION", "note": "LICENSE.md is \"MIT + Commons Clause License Condition v1.0\" (checked 2026-10-13): not MIT-only, so it fails the MIT/Apache-2.0 rule. Owner decision needed to use it. Until then, compose the same effects from house atoms (web-effects-catalog) adapted to the design tokens." },
+      "status": "blocked-license"
+    },
+    {
+      "name": "website-motion-orchestrator",
+      "description": "The website build's motion step: after the frontend-design direction is chosen (website-build-standard), select only the motion that fits the site type and content; never impose motion at the expense of usability.",
+      "triggers": ["build a site", "add motion to this site", "which animations should this site use"],
+      "inputs": { "site_type": "marketing | content | app | admin | dashboard", "content": "{ viewports, stats, layered_hero, lists }", "brand_tokens": "{ motion?: 'none' }" },
+      "outputs": "{ methods, atoms, reasons } from assets/motion-select.mjs, then the complete build via website-build-standard",
+      "cost": "heavy only on selection (the build itself)",
+      "source_reference": "website-build-standard + web-effects-catalog (house skills)",
+      "license": { "spdx": "house (own code)", "note": "no third-party code" },
+      "status": "shipped"
+    }
+  ]
+}

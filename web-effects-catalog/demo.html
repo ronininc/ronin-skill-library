@@ -112,7 +112,20 @@
     </section>
   </div>
 
+  <section id="motion-demo" aria-labelledby="motion-h" style="padding:4rem 1.5rem;max-width:60rem;margin:0 auto">
+    <h2 id="motion-h" class="reveal">Motion atoms: stagger, parallax, count-up</h2>
+    <ul data-reveal-stagger="90" style="list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:1rem">
+      <li class="reveal" style="padding:1rem;border:1px solid #ccc;border-radius:12px">First</li>
+      <li class="reveal" style="padding:1rem;border:1px solid #ccc;border-radius:12px">Second</li>
+      <li class="reveal" style="padding:1rem;border:1px solid #ccc;border-radius:12px">Third</li>
+    </ul>
+    <div style="overflow:hidden;border-radius:16px;margin:2rem 0;height:12rem;background:#eee">
+      <div data-parallax="0.2" style="height:16rem;background:linear-gradient(135deg,#4b6cb7,#182848)"></div>
+    </div>
+    <p>Orders served: <strong><span data-count-to="1250" data-count-ms="1200">1,250</span></strong></p>
+  </section>
   <script src="assets/reveal.js"></script>
+  <script src="assets/motion.js"></script>
   <script src="assets/xv.js"></script>
 </body>
 </html>

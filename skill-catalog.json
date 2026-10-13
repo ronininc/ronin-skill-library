@@ -1,8 +1,8 @@
 {
   "schema": "ronin-skill-catalog-v1",
-  "generated": "2026-10-11T01:35:41.433Z",
+  "generated": "2026-10-13T04:35:27.392Z",
   "source": "github.com/ronininc/ronin-skill-library",
-  "skillCount": 184,
+  "skillCount": 189,
   "recipeCount": 6,
   "packCount": 30,
   "foundation": [
@@ -488,6 +488,13 @@
       "path": "admin-search-export/SKILL.md"
     },
     {
+      "slug": "aftership",
+      "dir": "aftership",
+      "name": "aftership",
+      "description": "",
+      "path": "aftership/SKILL.md"
+    },
+    {
       "slug": "agnostic-import-parser",
       "dir": "agnostic-import-parser",
       "name": "agnostic-import-parser",
@@ -563,6 +570,13 @@
       "name": "brag-reel",
       "description": "Cut a short social AD / promo reel (10-35s MP4) for Instagram Reels, TikTok, YouTube or LinkedIn out of a screen recording, product screenshots, or photos — built on this machine with ffmpeg and ImageMagick only, no cloud service, no AI video model, no npm install. Use WHENEVER the user wants to \"turn this recording into an ad\", \"make a promo/reel/brag video for my app/site/business\", \"cut an ad for Instagram/YouTube/LinkedIn\", \"make a launch video\", \"show off what we built\", or drops a .mov/.mp4 and asks for marketing out of it. Produces one cut per platform (9:16, 16:9, 1:1) from ONE shared script, against a creative gate that refuses to ship an unreadable or dishonest reel. Do NOT use for long-form tutorials (use video-walkthrough) or generated footage (use movie-gen / media-generation-dispatch).",
       "path": "brag-reel/SKILL.md"
+    },
+    {
+      "slug": "briefing-animation",
+      "dir": "briefing-animation",
+      "name": "briefing-animation",
+      "description": "",
+      "path": "briefing-animation/SKILL.md"
     },
     {
       "slug": "buy-box-matcher",
@@ -873,6 +887,13 @@
       "path": "email-provider-honest-degrade/SKILL.md"
     },
     {
+      "slug": "etsy",
+      "dir": "etsy",
+      "name": "etsy",
+      "description": "",
+      "path": "etsy/SKILL.md"
+    },
+    {
       "slug": "exclusive-lead-claim-desk",
       "dir": "exclusive-lead-claim-desk",
       "name": "exclusive-lead-claim-desk",
@@ -1109,6 +1130,13 @@
       "name": "logical-backup-ndjson-r2",
       "description": "The recovery story a single-D1 app otherwise never gets: dump EVERY business table to newline-delimited JSON ({\"_t\":table,\"r\":row} per line), gzip it in the Worker runtime (~8-12x on repetitive rows), and write it to a PRIVATE R2 prefix (backups/<ISO-timestamp>.ndjson.gz) that no public route serves — plus a daily cron that runs it unattended (at most once/24h), tunable keep-N retention that prunes the oldest so R2 stays bounded, a viewer-readable run log, an admin-only on-demand run + streamed download, and a DOCUMENTED MANUAL restore (never a one-click endpoint). The dump is SCHEMA-AGNOSTIC — it enumerates tables from sqlite_master and SELECTs *, so it keeps capturing whatever columns/tables were added later with zero backup-code changes. Use WHENEVER a build needs: \"back up the CRM / the database\", \"give this a recovery story / disaster recovery\", \"export the whole DB\", \"how do we restore this / restore from backup\", \"keep only the last N backups\", \"prune old backups so R2 stays bounded\", or when they add their own tables/fields and the backup must keep working untouched. (For a pure storage-cap \"refuse uploads past the limit\" / usage-readout intent, or an archive-then-delete-attachments purge, reach for r2-upload-budget-guard / export-before-delete-reclaim instead — this skill is the DB dump + restore lifecycle.) Backend pattern on a Cloudflare Worker + D1 + R2. COMPLEMENTS d1-migration-recipes (restore = re-apply the migration chain, THEN reload rows; the schema ships as one additive Mode-A migration), append-only-audit-log (the backup_runs table is that same provable-log discipline, specialized to backup outcomes), and d1-proof-harness (prove a dump→gzip→restore round-trip end to end). Draws a hard boundary with r2-upload-budget-guard: THAT skill owns the account-wide R2 budget guard (refuse uploads past the cap), the usage readout, and the export-before-delete reclaim — it only gestures at backups; THIS skill owns the backup/restore lifecycle in full (dump format, run log, cron, export, manual restore, round-trip proof). The shared seam is the keep-N retention prune. And custom-fields-engine is what LETS users add their own fields; this skill's schema-agnostic dump merely captures them for free. Guardrails: R2 put + retention prune are BEST-EFFORT (never fail the backup, and never throw into the cron); the run is ALWAYS logged, even on failure (ok=0 + error); restore is a DELIBERATE manual procedure into a FRESH db, never a blind overwrite of live data; skip sqlite_/\\_cf_/d1_ internal tables and the migration ledger; column is run_trigger, NOT trigger (reserved SQLite keyword); backups contain PII so the bucket stays private and the download endpoint admin-only.",
       "path": "logical-backup-ndjson-r2/SKILL.md"
+    },
+    {
+      "slug": "map-explorer",
+      "dir": "map-explorer",
+      "name": "map-explorer",
+      "description": "",
+      "path": "map-explorer/SKILL.md"
     },
     {
       "slug": "media-generation-dispatch",
@@ -1468,6 +1496,13 @@
       "path": "services-delivery-lifecycle/SKILL.md"
     },
     {
+      "slug": "shop-wallet",
+      "dir": "shop-wallet",
+      "name": "shop-wallet",
+      "description": "",
+      "path": "shop-wallet/SKILL.md"
+    },
+    {
       "slug": "shopify-order-bridge",
       "dir": "shopify-order-bridge",
       "name": "shopify-order-bridge",
@@ -1702,7 +1737,7 @@
       "slug": "web-effects-catalog",
       "dir": "web-effects-catalog",
       "name": "web-effects-catalog",
-      "description": "The house library of reusable, SOVEREIGN web animations & interactions — the mix-and-match effect atoms every client/team site pulls from, hand-coded (no WordPress/Elementor/page-builder, no CDN), accessible-by-default, and reduced-motion-safe. Use this WHENEVER a build needs motion or an interactive flourish and you want to compose it from proven house parts instead of inventing one: scroll-entrance reveals (the slideInUp family), the signature \"exploded-view\" inspector (hover an item — a bowl, a burger, furniture, a computer — and its parts blow apart, float as if in a vacuum, then coalesce back), parallax, marquees/tickers, flip cards, sticky headers, tilt, count-ups, and more. Trigger on \"add an animation/effect\", \"make it interactive\", \"reveal on scroll\", \"slide up as you scroll\", \"see what's inside / see what's in your order\", \"exploded view\", \"blow it apart\", \"show the internals\", \"hover to inspect\", \"floating parts\", \"keep the animations as skills\", or any motion request on top of website-build-standard / sports-website-standard / commerce-spine. Each effect ships a drop-in file in assets/, a What/Tech/Fallback/Needs recipe in references/effects-catalog.md, and a real reduced-motion fallback. Do NOT reach for a page-builder, a heavyweight animation framework, or a CDN library when an atom here (or a small hand-coded one in the same style) will do. Non-negotiable house rules: content is VISIBLE BY DEFAULT (motion is an enhancement, never a gate on content or SEO), every effect degrades under prefers-reduced-motion and on touch, and nothing fakes live data.",
+      "description": "The house library of reusable, SOVEREIGN web animations & interactions — the mix-and-match effect atoms every client/team site pulls from, hand-coded (no WordPress/Elementor/page-builder, no CDN), accessible-by-default, and reduced-motion-safe. Use this WHENEVER a build needs motion or an interactive flourish and you want to compose it from proven house parts instead of inventing one: scroll-entrance reveals (the slideInUp family), the signature \"exploded-view\" inspector (hover an item — a bowl, a burger, furniture, a computer — and its parts blow apart, float as if in a vacuum, then coalesce back), parallax, marquees/tickers, flip cards, sticky headers, tilt, count-ups, and more. Trigger on \"add an animation/effect\", \"make it interactive\", \"reveal on scroll\", \"slide up as you scroll\", \"see what's inside / see what's in your order\", \"exploded view\", \"blow it apart\", \"show the internals\", \"hover to inspect\", \"floating parts\", \"keep the animations as skills\", or any motion request on top of website-build-standard / sports-website-standard / commerce-spine. Also the house answer to \"use GSAP\", \"add Lenis smooth scroll\" or \"use React Bits\": see Motion methods (schema'd, license-checked registry + a motion selector for site builds). Each effect ships a drop-in file in assets/, a What/Tech/Fallback/Needs recipe in references/effects-catalog.md, and a real reduced-motion fallback. Do NOT reach for a page-builder, a heavyweight animation framework, or a CDN library when an atom here (or a small hand-coded one in the same style) will do. Non-negotiable house rules: content is VISIBLE BY DEFAULT (motion is an enhancement, never a gate on content or SEO), every effect degrades under prefers-reduced-motion and on touch, and nothing fakes live data.",
       "path": "web-effects-catalog/SKILL.md"
     },
     {
