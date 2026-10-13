@@ -11,7 +11,9 @@ description: >-
   more. Trigger on "add an animation/effect", "make it interactive", "reveal on scroll", "slide up as
   you scroll", "see what's inside / see what's in your order", "exploded view", "blow it apart",
   "show the internals", "hover to inspect", "floating parts", "keep the animations as skills", or any
-  motion request on top of website-build-standard / sports-website-standard / commerce-spine. Each
+  motion request on top of website-build-standard / sports-website-standard / commerce-spine. Also the
+  house answer to "use GSAP", "add Lenis smooth scroll" or "use React Bits": see Motion methods (schema'd,
+  license-checked registry + a motion selector for site builds). Each
   effect ships a drop-in file in assets/, a What/Tech/Fallback/Needs recipe in
   references/effects-catalog.md, and a real reduced-motion fallback. Do NOT reach for a page-builder,
   a heavyweight animation framework, or a CDN library when an atom here (or a small hand-coded one in
@@ -62,14 +64,19 @@ Read the recipe before wiring an atom. Drop-in files are in `assets/`.
   if floating in a vacuum, revealing per-part labels — then coalesce back on leave. Works for any
   layered item: açaí bowls & burgers (ingredients), furniture (components), computers/gadgets
   (internals). `assets/xv.css` + `assets/xv.js`. Live demo: `demo.html`.
+- **`stagger` · `parallax` · `count-up` — `assets/motion.js`.** `data-reveal-stagger="80"` on a parent
+  staggers its `.reveal` children; `data-parallax="0.15"` gives a layer gentle scroll depth (only while on
+  screen); `data-count-to="1250"` counts up to the real number already in the text (screen readers get the
+  final value). Reduced motion: static, untouched. Proven in `demo.html`.
+- **`smooth-scroll` — `assets/smooth-scroll.js`.** Opt-in Lenis (MIT) for marketing/content pages longer than
+  one viewport; native scroll for app/admin/dashboards, reduced motion, short pages, or when Lenis isn't
+  vendored.
 
 **Roadmap (add here as they graduate — same format, same doctrine)**
-- `parallax` — scroll-linked background/layer depth (replaces Elementor Motion-FX).
 - `marquee` — infinite ticker strip (news/menu/logos); reduced-motion → static strip.
 - `flip` — CSS 3D flip card on hover/tap (front → back); replaces Elementor flip-box.
 - `sticky-header` — shrink-on-scroll condensing header.
 - `tilt` — pointer-driven 3D tilt on cards/media.
-- `count-up` — odometer number roll on scroll-in (real numbers only).
 - `carousel` — vendored-Swiper-free hero/testimonial slider.
 - `cursor-spotlight` — radial light that follows the pointer over a section.
 
@@ -103,3 +110,21 @@ many capabilities. The house direction is to **decompose them into atoms that ca
 so a build pulls exactly the parts it needs. This catalog is the first worked example of that for the
 motion layer. The cross-skill decomposition index lives in
 `references/skill-atoms-index.md`.
+
+## Motion methods (schema'd, license-checked)
+
+`references/motion-methods.json` is the selectable registry (`ronin.motion-method/v1`: name, description,
+triggers, inputs, outputs, cost, source reference, license, status). Licenses were checked 2026-10-13
+against each project itself, under the MIT/Apache-2.0-only rule:
+
+| Method | Built from | License verdict |
+|---|---|---|
+| `scroll-animation` (the "GSAP" slot) | `reveal.js` + `motion.js` (house) | GSAP is "Standard no-charge", not MIT/Apache: **not vendored**; use needs an owner decision |
+| `lenis-smooth-scroll` | `smooth-scroll.js` + vendored Lenis | Lenis **MIT**: allowed; vendor a pinned dist file per site |
+| `react-bits-components` | n/a | **MIT + Commons Clause**: blocked; compose from house atoms with design tokens instead |
+| `website-motion-orchestrator` | `assets/motion-select.mjs` | house |
+
+**Orchestrator order:** choose the design direction first (`website-build-standard`), then call
+`selectMotion({ site_type, content, brand_tokens, reduced_motion })`. It returns only the methods that fit:
+no smooth scroll or parallax on app/admin/dashboards, nothing under reduced motion or a `motion: 'none'`
+brand, and nothing on a one-screen page. Tests: `node --test test/motion.test.mjs`.
