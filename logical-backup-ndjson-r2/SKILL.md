@@ -36,7 +36,8 @@ description: >-
   db, never a blind overwrite of live data; skip sqlite_/\_cf_/d1_ internal tables
   and the migration ledger; column is run_trigger, NOT trigger (reserved SQLite
   keyword); backups contain PII so the bucket stays private and the download
-  endpoint admin-only.
+  endpoint admin-only; credentials never leave the DB (key/OAuth/session/invite
+  tables skipped, credential columns dumped NULL, a schema-scan proof).
 ---
 # logical-backup-ndjson-r2 — the recovery story for a single-D1 app
 
@@ -53,6 +54,22 @@ mean backups must self-prune rather than pile up forever.
 **Logical, not physical.** You dump *rows*, not the SQLite file. Restore =
 re-create the schema (re-apply migrations) and reload the rows. That is why the
 dump deliberately **excludes** the migration ledger and SQLite/CF internals.
+
+**Credentials never ride along.** The download is gated admin-only, but "admin"
+includes every admin login and any automation bearer that maps to one. A
+schema-agnostic `SELECT *` hands all of them every API key, OAuth refresh token and
+live session token in the database. The dump therefore skips **credential tables**
+outright and blanks **credential columns** inside business tables. A proof scans the
+schema so a new secret can't slip in unclassified. Restore then means re-entering
+keys and signing in again, and that is the right trade.
+
+**Default-include vs default-deny.** `ops-console` teaches the other design: a
+JSON backup of an explicit allowlist of durable tables. Credentials are left out by
+construction, because nobody lists `sessions`. Use that when the schema is small and
+fixed. Use this skill's dump-everything-minus-credentials when the backup must
+capture tables and fields added later (custom fields, new engines) without code
+changes. It is weaker by default: a credential column the classifier misses
+ships. So the classification proof below is not optional.
 
 **Composes with (extend these, do not re-implement):**
 - **d1-migration-recipes** — the backup schema ships as ONE additive (Mode A)
@@ -81,26 +98,33 @@ dump deliberately **excludes** the migration ledger and SQLite/CF internals.
   but keep the records" there; route "back up / restore the database" here.
 
 ## Reference implementation — exact source file:line
-Proven + shipped in the ronininc-crm baseline (app-forge worktree). Genericise
-every name below (binding, bucket, tables) when you lift it — patterns only.
-- `worker/backup.ts:21-24` — `gzip()`: WHATWG Compression Streams in the Workers
+Proven + shipped in the ronininc-crm baseline (app-forge worktree), except the
+credential exclusion, which is **pending ronininc-crm#321** (open, not yet on
+`main`). Genericise every name below (binding, bucket, tables) when you lift it —
+patterns only. `worker/backup.ts` is cited by symbol because its line numbers move
+with every edit; the other files keep baseline line refs.
+- `worker/backup.ts` `gzip()` — WHATWG Compression Streams in the Workers
   runtime (`new CompressionStream('gzip')`), no library. NDJSON is highly
   repetitive → ~8-12x smaller stored footprint.
-- `worker/backup.ts:28-39` — `dumpDatabase()`: the schema-agnostic core. Reads
-  table names from `sqlite_master`, filters internals, `SELECT *` per table,
-  emits `{_t, r}` one row per line. **:15** is the `skip()` filter
-  (`sqlite_`/`_cf_`/`d1_` prefixes); **:14** is `MAX_ROWS_PER_TABLE = 50000`;
-  **:34** quotes the table name and caps the LIMIT.
-- `worker/backup.ts:43-77` — `runBackup()`: dump → gzip → `R2.put` under a
-  timestamped key (**:54**) → **:61-68** keep-N retention prune → **:73-75**
-  log `backup_runs` + stamp `backup_settings.last_run_at`. **:69-71** is the
-  no-R2 fallback (report raw size); **:72** captures the error (`slice(0,300)`).
-- `worker/backup.ts:80-85` — `maybeBackup()`: the cron guard (enabled? + ≥24h
-  since last run?).
-- `worker/backup.ts:90-122` — the four admin handlers: `listBackups` (viewer
-  read, **:90-96**), `runBackupRequest` (**:100-102**), `backupExport`
-  (streamed NDJSON download, no R2 needed, **:105-114**), `saveBackupSettings`
-  (toggle, **:117-122**).
+- `worker/backup.ts` `dumpDatabase()` — the schema-agnostic core. Reads
+  table names from `sqlite_master`, filters them through `skip()`
+  (`sqlite_`/`_cf_`/`d1_` prefixes + `SECRET_TABLES`), `SELECT *` per table with the
+  name quoted and the LIMIT capped at `MAX_ROWS_PER_TABLE = 50000`, blanks
+  `SECRET_COLUMNS`, emits `{_t, r}` one row per line.
+- `worker/backup.ts` `SECRET_TABLES` / `SECRET_COLUMNS` (pending #321) — the
+  credential exclusion. The baseline shipped without it and leaked live session
+  tokens (the login cookie itself), plaintext OAuth tokens and the LLM-judge keys
+  to anyone who could pull the export. `worker/lib/_proof/backup.test.mjs` (pending
+  #321) — the schema scan + seeded-secret proof (export AND the stored R2 object).
+- `worker/backup.ts` `runBackup()` — dump → gzip → `R2.put` under a timestamped
+  key → keep-N retention prune → log `backup_runs` + stamp
+  `backup_settings.last_run_at`; a no-R2 fallback reports the raw size, and the
+  error is captured (`slice(0,300)`), never thrown.
+- `worker/backup.ts` `maybeBackup()` — the cron guard (enabled? + ≥24h since
+  last run?).
+- `worker/backup.ts` admin handlers — `listBackups` (viewer read),
+  `runBackupRequest`, `backupExport` (streamed NDJSON download, no R2 needed),
+  `saveBackupSettings` (toggle).
 - `migrations/0065_backups.sql:7-26` — the additive Mode-A schema:
   `backup_settings` (singleton) + seed (**:13**), `backup_runs` + index. Note
   **:23** — the column is `run_trigger`, NOT `trigger` (reserved SQLite keyword).
@@ -146,7 +170,13 @@ CREATE INDEX IF NOT EXISTS idx_backup_runs_created ON backup_runs(created_at DES
 **2. Handlers.** Schema-agnostic dump, then a best-effort store + always-log run:
 ```js
 const MAX_ROWS_PER_TABLE = 50000;
-const skip = (n) => n.startsWith('sqlite_') || n.startsWith('_cf_') || n.startsWith('d1_'); // internals + migration ledger
+// Tables that ACT AS the app (provider keys, OAuth grants, live logins, unused invites): never dumped.
+// Name YOUR app's tables here: sessions are the one every app has.
+const SECRET_TABLES = new Set(['sessions', 'auth_tokens', 'oauth_states', 'integrations', 'provider_secrets']);
+// Credentials inside tables that otherwise belong in a backup: row kept, value dumped as NULL.
+const SECRET_COLUMNS = { org_bank: ['plaid_access_enc'] };
+const skip = (n) => n.startsWith('sqlite_') || n.startsWith('_cf_') || n.startsWith('d1_') // internals + migration ledger
+  || SECRET_TABLES.has(n);
 
 async function gzip(text) {                                            // no library — WHATWG streams
   const s = new Response(text).body.pipeThrough(new CompressionStream('gzip'));
@@ -161,7 +191,11 @@ async function dumpDatabase(env) {                                     // surviv
     // name comes from sqlite_master (trusted); quote it defensively
     const res = await env.DB.prepare(`SELECT * FROM "${name}" LIMIT ${MAX_ROWS_PER_TABLE}`).all().catch(() => ({ results: [] }));
     tables++;
-    for (const r of res.results || []) { ndjson += JSON.stringify({ _t: name, r }) + '\n'; rows++; }
+    const redact = SECRET_COLUMNS[name] || [];
+    for (const r of res.results || []) {
+      for (const c of redact) if (c in r) r[c] = null;                 // the row survives, the credential doesn't
+      ndjson += JSON.stringify({ _t: name, r }) + '\n'; rows++;
+    }
   }
   return { ndjson, tables, rows };
 }
@@ -225,6 +259,11 @@ Deliberately not an endpoint. (a) Fetch the dump — from a downloaded export, o
 NDJSON by `_t` and emit `INSERT OR REPLACE` per row; load parents before children,
 or wrap in `PRAGMA defer_foreign_keys=ON`. (d) Verify with `SELECT COUNT(*)`, point
 the Worker at the restored DB, do a live login + record round-trip before trusting it.
+(e) Re-attach what the dump left out on purpose. Everyone signs in again (no
+sessions); re-enter stored provider keys; reconnect OAuth integrations; re-issue any
+blanked column (bank link, webhook or wake secrets); re-send unused invites. Restore
+with the SAME `ENCRYPTION_KEY`, or encrypted columns you kept won't decrypt. Ship
+this list in the restore doc, one line per excluded table or column.
 
 ### THE INVARIANT
 **Restore is never automatic; the backup path never breaks the app.** There is NO
@@ -232,6 +271,8 @@ one-click restore endpoint — overwriting live data must be a deliberate human 
 into a fresh database. And every side of the backup that *can* fail (R2 put,
 retention prune, the log write itself) is best-effort and swallowed: a backup
 failure records `ok=0` and moves on, it never throws into the cron or the request.
+And **no credential ever leaves the database**: a backup is a file someone will
+download, so it carries data, never the keys to act as the app.
 
 ## Gotchas — real pitfalls from the code + how it's validated
 - **`trigger` is a reserved SQLite keyword.** The column is `run_trigger`. Naming
@@ -254,6 +295,40 @@ failure records `ok=0` and moves on, it never throws into the cron or the reques
   prefix no public route serves, and gate the download endpoint admin-only. If the
   R2 bucket is shared with public assets, a prefix-scoped budget guard keeps the
   two from colliding.
+- **"Admin-only" is not "safe to hold credentials."** The real incident: the
+  baseline dumped `sessions` (the PK *is* the login cookie), plaintext Upwork
+  OAuth tokens, the Google refresh token, unused invites, the Plaid token and the
+  LLM-judge keys. The export route checked `role === 'admin'`, and an automation
+  master bearer counted as admin. So whoever held that bearer could sign in as the
+  owner and act at every connected provider. The worst of it (`sessions`, the OAuth
+  tables, the bank table) existed BEFORE the backup was written. The dump leaked
+  from day one, because nobody classified credentials when it was built. Later
+  tables (LLM-judge keys, bot-desk wake secrets) then joined silently. The one table
+  that never leaked was the provider-key vault: it was excluded in the same change
+  that created it. So classify at build time, then keep a proof that forces the
+  question for every new column.
+- **Classify every credential-shaped column; don't hunt for them by eye.** Scan the
+  migrated schema and fail unless each hit is SKIPPED (its table is in
+  `SECRET_TABLES`), REDACTED (in `SECRET_COLUMNS`), or KEPT with a written reason.
+  Read the schema from the local miniflare `.sqlite` file: D1, even local, refuses
+  `pragma_table_info` with SQLITE_AUTH. Use `node:sqlite` (no flag from Node 22.13 /
+  23.4; 22.5–22.12 need `--experimental-sqlite`) or the `sqlite3 <file>` CLI on older
+  Node. Match at least
+  `/(_enc|token|secret|signing_key|api_key|access_key|private_key|password|passwd|credential|cookie|_pin|_otp)$/i`.
+  Treat any other `*_key` column as a hit too, with a short NOT-a-secret allowlist
+  (`idempotency_key`, `dedupe_key`, `r2_key`, `cache_key`, object/media keys…) so
+  real ones like `api_key` or `stripe_key` can't hide among them. Column names
+  can't see inside JSON. Any `*_json` / `config` / `settings` / `params` blob that
+  might hold a key gets read by hand and marked KEPT ("no credentials, checked
+  <date>") or REDACTED. Keep on purpose: encrypted values the app needs to stay
+  correct after a restore (2FA seeds, an HMAC key that signs links already sent,
+  encrypted PII); unsubscribe and other per-record links already in people's
+  inboxes; short-lived nonces. Token *ids* aren't credentials. Hashes (`*_hash`) are
+  safe to keep only when they're slow and salted (PBKDF2/bcrypt/scrypt/argon2 for
+  passwords) or hashes of high-entropy random tokens. A fast or unsalted hash of a
+  password, PIN, OTP or short invite code is crackable offline: redact it or skip
+  its table. Blanking a 2FA seed while `totp_enabled=1` stays set locks users out,
+  so keep it encrypted rather than redacting it.
 - **Co-tenanting R2.** The reference reuses one bucket for tiles, uploads, AND
   backups behind distinct prefixes; a keep-N cap + an upload budget stop backups
   from ever silently tripping account-wide R2 overage. Give each concern its own
@@ -262,4 +337,10 @@ failure records `ok=0` and moves on, it never throws into the cron or the reques
   several tables (including a user-added one, to prove schema-agnosticism),
   `POST /backup/run`, assert `ok && tables && rows`, then replay the exported
   NDJSON into a fresh DB and assert `COUNT(*)` matches per table. That round-trip,
-  not a green log line, is the proof the recovery story actually recovers.
+  not a green log line, is the proof the recovery story actually recovers. For the
+  credential rule, seed a marked row in every `SECRET_TABLES` table and
+  `SECRET_COLUMNS` column, and use a REAL session cookie from a login. Then assert
+  that neither the export nor the stored R2 object (read back with
+  `wrangler r2 object get … --local`, gunzipped) carries a skipped table's `_t`, any
+  marker, or the cookie value, and that redacted rows are present with the column
+  NULL. Run it once against the unpatched dump to see it fail.
