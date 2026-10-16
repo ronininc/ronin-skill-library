@@ -78,13 +78,28 @@ script that must run for it to appear.
 
 ---
 
+### `stagger` · `parallax` · `count-up` — `assets/motion.js` · TIER 1
+
+- **What:** stagger a group's reveals; give a layer gentle scroll depth; count a real number up on scroll-in.
+- **Tech:** `data-reveal-stagger` sets per-child `transition-delay` (with `reveal.js`). `data-parallax` (−1…1):
+  `IntersectionObserver` gates which layers are on screen, one rAF writes `translate3d` (0 when centred).
+  `data-count-to`: eased rAF count with `Intl.NumberFormat`; `aria-label` holds the final value.
+- **Fallback:** reduced motion or no IntersectionObserver leaves everything static and the authored number in place.
+- **Needs:** a real number in the HTML for count-up (never a fake "live" figure).
+
+### `smooth-scroll` — `assets/smooth-scroll.js` · opt-in
+
+- **What:** Lenis smooth scrolling (`lerp` 0.1, `smoothWheel`) for long marketing/content pages.
+- **Tech:** wrapper over a vendored, pinned Lenis (MIT); `RoninSmoothScroll.init({ siteType })` drives `lenis.raf`.
+- **Fallback:** returns null and keeps native scroll for app/admin/dashboards, reduced motion, pages of one
+  viewport or less, or when Lenis is not vendored (`RoninSmoothScroll.skipped` says why).
+- **Needs:** the Lenis dist file vendored into `/assets` (pinned version recorded in the README).
+
 ## 3. Roadmap atoms (not yet shipped — add here in the same format)
 
 Graduate an atom by: writing its `assets/` file(s), adding its **What/Tech/Fallback/Needs** block
 here, listing it under "Shipped" in `SKILL.md`, and proving it in `demo.html`.
 
-- **`parallax`** — scroll-linked layer depth. Tech: `IntersectionObserver` + scroll ratio → per-layer
-  `translateY`. Fallback: static. (Replaces Elementor Motion-FX — 37 scroll effects on the acai site.)
 - **`marquee`** — duplicated-track `translateX` keyframe loop for a news/menu/logo ticker. Fallback:
   static strip. Needs: a real feed if labeled "live".
 - **`flip`** — CSS 3D flip card (`rotateY`, `backface-visibility`) front↔back on hover/tap. Fallback:
@@ -92,7 +107,5 @@ here, listing it under "Shipped" in `SKILL.md`, and proving it in `demo.html`.
 - **`sticky-header`** — condense/shrink header past a scroll threshold via a class toggle. Fallback:
   plain sticky.
 - **`tilt`** — pointer → 3D `rotateX/Y` on a card (shared with `xv`'s tilt helper). Fallback: none.
-- **`count-up`** — per-digit `translateY` odometer to a target on scroll-in. Fallback: final value.
-  Needs: real number; static/`—` if "live".
 - **`carousel`** — minimal hero/testimonial slider (pointer + snap) without vendoring Swiper.
 - **`cursor-spotlight`** — radial-gradient light following the pointer over a hero. Fallback: static.
