@@ -10,7 +10,7 @@ description: >-
   campaigns but I approve first", or "an operator console." It COMPLEMENTS crm-mcp-server (that exposes
   the CRM to an EXTERNAL brain over MCP; this is the WEB operator surface inside the admin — different
   entry point, same governance philosophy), append-only-audit-log (every executed action is logged — reuse
-  it), and a pluggable draft-brain helper (the swappable Claude/ChatGPT/self-hosted/Workers-AI model — do
+  it), and a pluggable draft-brain helper (the swappable Codex/ChatGPT/self-hosted/Workers-AI model — do
   NOT hardcode a provider). Guardrails: the executor NEVER trusts the model's params (re-fetches + re-checks
   every id and enum), the action list is a closed whitelist, money/irreversible stays off it, and no action
   runs without an explicit human click.

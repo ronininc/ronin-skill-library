@@ -1,0 +1,4 @@
+Rank,Business,Tier,Score,Top gap / hook,Location,Cuisine / type,Decision-maker,Contact,Own-site ordering,Delivery apps,Demand (reviews x rating),Status/gate,Deep dive (Build Brief),Buy-box,Sources
+1,EXAMPLE — Cornish Pasty Co.,A,86,"On 3 apps, no own-site ordering, 3.9k reviews @4.7*",Tempe AZ,British/Pub,Owner if found,"phone (verified); email Unknown",none,"DoorDash; Uber Eats; Grubhub","3,900 @ 4.7* (GBP)",qualified,briefs/cornish-pasty.md,orosolu-restaurant v1,"<gbp url>; <site url>; <doordash url>"
+2,EXAMPLE — closed candidate,DROP,,Permanently closed,Tempe AZ,Pizza,,,,,,"DROP: not operating",—,orosolu-restaurant v1,"<gbp url>"
+3,EXAMPLE — ghost kitchen,INCOMPLETE,,No reachable contact; ordering unverified,Tempe AZ,Wings,Unknown,Unknown,Unknown,"Uber Eats",Unknown,"INCOMPLETE: reachability, direct-ordering unverified",briefs/ghost-kitchen-partial.md,orosolu-restaurant v1,"<uber eats url>"

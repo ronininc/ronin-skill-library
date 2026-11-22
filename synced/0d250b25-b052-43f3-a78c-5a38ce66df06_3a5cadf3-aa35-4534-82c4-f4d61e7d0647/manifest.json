@@ -1,0 +1,303 @@
+{
+  "lastUpdated": 1792241951314,
+  "skills": [
+    {
+      "skillId": "skill_01DfPMhYcoxWejm5zcnNWRAT",
+      "name": "voice-operations-command",
+      "description": "Operate Claude's connected connectors by voice from the mobile app. Use this whenever the user is speaking or dictating to the voice orb and asks Claude to send or draft an email, message someone, create or reschedule a calendar event, add a Google Meet link, check or report the current state of anything in a connected connector (Gmail, Google Calendar, Google Drive, Clover, or any connected MCP), or run an \"operations command.\" Trigger on spoken, hands-free, one-shot operational requests even when the user does not name the connector. This is the inside-Claude voice bridge; it is intentionally separate from Solomon. Never use GitHub through this skill.",
+      "source": "plugin",
+      "updatedAt": "2026-07-19T22:39:02.293691Z",
+      "backingPluginId": "plugin_01SZ99N2kp5nA23njoWLEuzq"
+    },
+    {
+      "skillId": "skill_012BxsC3YipjoVscMM8zf8Dq",
+      "name": "solomon-repo-hygiene",
+      "description": "Keep the Solomon / TSS repository clean-clone healthy — never commit generated artifacts, keep the working tree buildable from a fresh clone with no manual repair, and protect Priority 1 (Repository Integrity). Use this whenever you are committing, staging, reviewing a diff, opening a PR, adding a .gitignore entry, or investigating why a clean clone fails to install/build/package in the ronininc/TSS repo. Trigger on \"commit this\", \"open a PR\", \"why did a generated file get committed\", \"clean up the repo\", \"clean-install failing\", \"what should be gitignored\", or \"does this change keep the clone reproducible\". Repository integrity always takes precedence over feature velocity — a committed build artifact can silently break every other engineer's clone.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:33:29.348431Z",
+      "backingPluginId": "plugin_01BxYuxPLKZqqaSK1PPRoqp7"
+    },
+    {
+      "skillId": "skill_01YKVp4fANkhyMK5ui9cEaag",
+      "name": "spanish-regional-localization",
+      "description": "Produce Spanish website/marketing copy that sounds like a native speaker from the SPECIFIC country/region tied to the business, not generic textbook or \"neutral\" Spanish. Use this WHENEVER writing, translating, or reviewing Spanish (ES) copy for a client site, menu, ad, or social post — always, even if the user just says \"translate this to Spanish\" or \"make it bilingual.\" Trigger hard on restaurant/food-business sites, since cuisine almost always signals the culture (Cuban, Colombian, Venezolano, Puerto Rican, Dominican, Argentine, and Mexican-regional — Sinaloa/Sonora vs. Chihuahua vs. CDMX vs. Yucatán all differ). Also trigger for non-restaurant clients once national/regional origin is known. Do NOT skip this for \"simple\" translations — the whole point of this skill is that grammatically-correct Spanish that ignores regional colloquialisms reads as foreign/stilted to the target audience, which is exactly the failure mode this skill exists to prevent.",
+      "source": "plugin",
+      "updatedAt": "2026-08-07T04:41:11.628996Z",
+      "backingPluginId": "plugin_016DqyYGuDshg6C4KvVKZGAK"
+    },
+    {
+      "skillId": "skill_016xWeX23ftfNz4NVcd964Zd",
+      "name": "site-media-fetch",
+      "description": "The house media-harvest engine — finds and downloads a business's REAL videos (and audio, thumbnails, posters) from their public social profiles using yt-dlp, then preps them as web-ready files for a site build. Use WHENEVER a client/prospect site needs real footage: \"grab their videos\", \"pull the reels from their Instagram/TikTok/Facebook/YouTube\", \"download their video for the hero\", \"get real media for the site\", \"find their videos and bring them in\", or any time website-build-standard / custom-lead-generator / the agnostic lead engine reaches a shop whose hero or gallery slots are empty. Downloads only public media; the goal is owned/authorized footage for the business's OWN site. Never fabricates media — if a profile has no usable video, mark the slot CLIENT-UPLOAD. Pairs with profiler + business-profile-recon (to locate the right profiles first) and hands finished files to website-build-standard.",
+      "source": "plugin",
+      "updatedAt": "2026-08-11T23:24:17.971088Z",
+      "backingPluginId": "plugin_01L6GZTcqP9gDBxQALNgHpw7"
+    },
+    {
+      "skillId": "skill_01VkWysB2PXQcRY7xoQAvXGc",
+      "name": "business-profile-recon",
+      "description": "Forces a real profile-recon pass before writing anything factual about a specific real business — a website, landing page, menu, ad, cold email, lead sheet, or \"look them up\" request. Whenever a task names or implies a real business (restaurant, shop, clinic, contractor) and the output will state its facts (hours, address, phone, menu, prices, brand, photos, socials), use this skill to REACH the business's live profiles first — owner.com, Google Business Profile, Yelp, Instagram, TikTok, Facebook, Apple Maps, and delivery/ordering platforms (DoorDash, Uber Eats, Toast, Clover, Square) — pull verified facts, and cite or mark every one. Trigger on \"build a site for them\", \"look them up\", \"pull their info\", \"reach their profile\", \"find their menu/hours\", \"make them a page\", or any lead-gen / enrichment request. Do NOT invent or placeholder facts when a real business is named — recon is mandatory, especially when building a client site so real details replace placeholders.",
+      "source": "plugin",
+      "updatedAt": "2026-07-23T02:19:57.287215Z",
+      "backingPluginId": "plugin_01PfR8i2GFFaZVu83krK7VVF"
+    },
+    {
+      "skillId": "skill_0162dSZuvegDfEuUZjZSuF62",
+      "name": "big-box-store",
+      "description": "Build a website for a high-SKU retailer straight from its POS inventory export — grocery, market, bodega, wholesale or restaurant supply, hardware, liquor, party or dollar store. Use WHENEVER the catalogue is too big to hand-author (~200+ items) or the client hands over a product export from Lightspeed/Vend, Square, Clover, Shopify, Toast or any inventory CSV/XLSX. Trigger on \"here's our inventory\", \"product export\", \"populate the site with our items\", \"thousands of SKUs\", \"build the catalogue\", \"dropdown categories\", \"make it like Amazon\", or a product spreadsheet attached to a site build. Parses and normalises the export, merging the duplicate and misspelt categories a hand-typed POS accumulates; builds dropdown department → sub-category nav and catalogue-wide search; gives EVERY item a swipeable multi-frame gallery generated in-browser from the store's own data at zero cost. Extends website-build-standard. NOT for a small hand-authored product list, a restaurant menu, or a site with no inventory.",
+      "source": "plugin",
+      "updatedAt": "2026-08-05T04:12:45.875972Z",
+      "backingPluginId": "plugin_01JTmPa57jgLNHTtLBU67Qh4"
+    },
+    {
+      "skillId": "skill_01QxoZSztcPJjMedqBmJycQX",
+      "name": "cloudflare-ordering-worker",
+      "description": "Add real online ordering to a static client website by deploying a Cloudflare Worker as the ordering + payment backend. Use this WHENEVER a site needs to take orders or payments — \"add online ordering\", \"let them order/pay on the site\", \"wire up checkout\", \"add a cart\", \"deploy the ordering worker\", \"make the shop live\", \"connect Stripe/Clover/Square\", or any time you finish a website-build-standard site whose payment-ready shop now needs a working backend. This is the house bolt-on that turns the static \"payment-ready\" structure into a live, hosted ordering system without a rebuild. Trigger even if the user only says \"they need to take orders\" and doesn't name Cloudflare or Workers. Do NOT hand-roll a server, a Node/Express backend, or paste secret keys into the front-end — the ordering path is always this Worker.",
+      "source": "plugin",
+      "updatedAt": "2026-07-26T18:50:53.917153Z",
+      "backingPluginId": "plugin_01HcXzZx3F1xrnaMppEBuYJb"
+    },
+    {
+      "skillId": "skill_01FkmC1wg5Xu5DGoTtk92ViU",
+      "name": "solomon-flagship-driver",
+      "description": "The master orchestrator for driving the Solomon / TSS August 2 flagship README to real completion. Use this whenever the goal is the whole outcome rather than one step: \"complete the readme\", \"close the flagship\", \"drive Solomon to done\", \"get the release ready\", \"run everything and fix what's broken\", or \"make it work\". It runs the full completion loop end to end — get repo access, verify clean-clone, run the aggregate gates, author any missing proofs, verify each engine with live evidence, sync the README/status truthfully, fix the Cloudflare site, and open a PR — by calling the focused Solomon skills in the right order. It coordinates; the other skills do the specialized work. Its prime directive is Solomon's own: nothing is marked done that a real proof doesn't back, and every status written is driven by output actually observed this run.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:46:17.047091Z",
+      "backingPluginId": "plugin_01ExMKH5u7jEzK5xghsaKVKa"
+    },
+    {
+      "skillId": "skill_01TCLk1dnW67FsDL3PcrcEnn",
+      "name": "custom-lead-generator",
+      "description": "The orosolu.org engine — our version of Owner.com. It finds and qualifies local restaurant prospects in an area (lead gen), AND for every shop it surfaces (plus any target you name that we haven't pitched yet) it auto-runs a deep intelligence + media dive — menu, hours, address, phone, socials, reviews, brand colors, logo, real photos/videos — synthesized into a Build Brief that feeds website-build- standard. Use WHENEVER the task is to find/qualify/score leads, build a prospect list, scan an area for shops, OR look up a specific business, pull everything on them, gather info + media, onboard a client, or prep a shop for a site build. Trigger on \"find leads\", \"build a lead list\", \"who should we target\", \"scan an area\", \"qualify these\", \"look up a shop\", \"pull their info/menu/photos\", \"gather everything on them\", or a business name to build for. Builds on business-profile-recon for facts; hands off to website-build-standard. Never fabricates facts or media — unverifiable items are Unknown / CLIENT-UPLOAD.",
+      "source": "plugin",
+      "updatedAt": "2026-07-26T23:03:49.547103Z",
+      "backingPluginId": "plugin_014pB1ANkwWRa9aMFJqizLuJ"
+    },
+    {
+      "skillId": "skill_017Y6DAaRytAgQ5oTktWwTth",
+      "name": "app-remake-belt",
+      "description": "Run Solomon's 11-agent remake belt to absorb a tool's capability as a Solomon-native function: clean-room behavior spec, architecture, design, build, QA, review-mining for the original's unsolved problems, governed ship. Trigger when Robbie wants Solomon to remake a capability he saw in a demo, reel, or article.",
+      "source": "plugin",
+      "updatedAt": "2026-10-04T01:45:15.142294Z",
+      "backingPluginId": "plugin_01HviMENtdoKhNdqXbnPtMjq"
+    },
+    {
+      "skillId": "skill_0114vfTqaZPVNk5zCWXTQwzs",
+      "name": "immersive-evidence-workspace",
+      "description": "House standard: every site's interactive centerpiece is an immersive, futuristic AR workspace of the product line. Products sit on a holographic table as glowing ring-pedestals; select one to zoom in and ENTER its space (details + sourced evidence + media), or walk it in 3D. Builder-editable before deploy, locked for visitors after; driven by one manifest and tuned to each product line's nature. Use for any portfolio/product/listing site, showcase, evidence or data room, or an \"explore the system\" map (e.g. the Solomon brain). Also use when a client uploads their own photos/videos into fixed slots via a guided boot-prompt and the render becomes their files live. Trigger on: AR workspace, make it immersive, walkthrough, enter the space, select to see evidence, explore the system, multiple listings across pages, let the client upload media, boot prompt for uploads, same way as the workspace.",
+      "source": "plugin",
+      "updatedAt": "2026-07-21T19:31:37.099279Z",
+      "backingPluginId": "plugin_016yT6NeHR5CL8LZWBcN59eW"
+    },
+    {
+      "skillId": "skill_019JBTjvic6tkW6JVx6rnjdD",
+      "name": "website-build-standard",
+      "description": "The house standard for building client/team websites. Use this WHENEVER building, redesigning, or drafting a website, landing page, microsite, one-pager, or marketing site — even if the user doesn't name the standard or these features. Trigger on \"build a site\", \"make a website / landing page\", \"spin up a page for [client]\", \"client one-pager\", \"make them a web page\", or any request whose deliverable is a hosted web page. Encodes the defaults every site ships with: an immersive, physically-explorable centerpiece (with a 2D standard-mode fallback), static Cloudflare-ready deploy, a builder-only drag-and-drop media editor (photo or MP4 per slot), a cinematic hero slideshow of the client's best photos as the default hero (until drone footage exists), click-to-zoom inspector, scalable SVG logos, a payment-ready shop, a per-site inquiry-routing destination, and a group/community link. Do NOT use for editing a non-web document, a slide deck, a spreadsheet, or backend/API work with no web page.",
+      "source": "plugin",
+      "updatedAt": "2026-07-27T15:56:18.627798Z",
+      "backingPluginId": "plugin_01NWKDRKqoBWA9p5PWGrWRQT"
+    },
+    {
+      "skillId": "skill_01TRpEafvRTosPnzDY2TiaSR",
+      "name": "service-business-website",
+      "description": "Build a complete client website for a local service business (landscaping, contracting, cleaning, pool care, HVAC and similar) structured like the SLIK build — public marketing pages plus three role-gated apps (a crew job tracker, an office drag-and-drop scheduler, and a client project portal) over a Supabase backend, with a reusable CSS motion kit and sign-in security tailored for Cloudflare Pages. Use this whenever the user wants to create, scaffold, or redesign a service-business site, pair a marketing site with a field/ops tool, add a client portal, crew tracker, or scheduling board, \"build a site like SLIK\", or deploy any of these to Cloudflare. Also use when tailoring an existing static site's auth, headers, or credential-stripping for a Cloudflare Pages deployment.",
+      "source": "plugin",
+      "updatedAt": "2026-08-10T01:45:00.252121Z",
+      "backingPluginId": "plugin_017DkCchzubPGcXjcqFKuhXu"
+    },
+    {
+      "skillId": "skill_012pR5NcwdYtq7iLjz9GCswq",
+      "name": "wholesale-real-estate",
+      "description": "The house wholesale real-estate deal engine — same shape as our Owner.com / custom-lead-generator skill, but for distressed / FHA / motivated-seller deals. Runs the full 7-stage lifecycle: market & criteria setup, lead sourcing / list pull, skip tracing, outreach & marketing, acquisition (comp, offer, contract lock), dispositions (find the cash buyer), assignment & close. At each stage it replicates what the paid platforms do (PropStream, DealMachine, REsimpli, InvestorLift) using free / public data and browsing, and names where a paid tool does it faster. Use WHENEVER the task involves wholesale real estate, motivated sellers, distressed or off-market property, pre-foreclosure / NOD / tax-delinquent / probate / absentee / vacant / FHA / HUD-home lists, pulling a lead list, skip tracing owners, comping / ARV / MAO, writing a purchase or assignment contract, building a cash-buyer list, or blasting a deal to buyers — even if they never says \"wholesale.\" Never fabricates owner or property facts; gaps = Unknown.",
+      "source": "plugin",
+      "updatedAt": "2026-08-04T06:35:45.874698Z",
+      "backingPluginId": "plugin_013M4BE1MDFyrMUkZRxJqzuj"
+    },
+    {
+      "skillId": "skill_01Jw9JZAbaRHGKDV7pgZup9B",
+      "name": "profiler",
+      "description": "The house identity-resolution engine — the Owner.com research layer beneath our lead-gen skills. Given an online account, logo, photo/video, handle, phone, or email, it proves which REAL BUSINESS it belongs to and pulls verified contact info. Runs five match tests — account→business, logo, photo/video, account↔website cross-link, and NAP (name-address-phone) consistency — scores each with a confidence tier, then enriches emails/phones. Serves BOTH verticals: restaurant prospects (orosolu / Owner.com, via custom-lead-generator) and real-estate owner targets (via wholesale-real-estate). Use for \"whose account is this\", \"does this IG/TikTok belong to that shop\", \"match this logo/photo to a business\", \"is this account the same as this website\", \"find their email/phone\", \"verify this profile is really them\", or \"de-dupe these profiles\". Uses web search + the Chrome browser for reverse-image and profile reads. Public business data only; never fabricates — unmatched = Unknown, every match shows its evidence + tier.",
+      "source": "plugin",
+      "updatedAt": "2026-08-04T20:37:53.356559Z",
+      "backingPluginId": "plugin_01CdY9GMUWaXukd8WZeWktvT"
+    },
+    {
+      "skillId": "chrome-browser",
+      "name": "chrome-browser",
+      "description": "Read this skill before the first step that uses Claude in Chrome, the browser extension whose tools are named mcp__claude-in-chrome__* (also called Chrome, the browser extension, or the external browser) and which acts in the person's real Chrome with their own sign-ins; before those tools are turned on there may be a single enable__mcp__claude-in-chrome tool instead. It covers loading the tools in one ToolSearch call, checking the person's open tabs and working in a new tab, site permissions, GIF recordings, console logs, dialogs to avoid, and when to stop and ask. It is not for the built-in browser (mcp__Claude_Browser__* or mcp__remote-devices__Claude_Browser__* tools), which has its own skill, and it does not decide which browser to use.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-18T21:09:50.227858Z"
+    },
+    {
+      "skillId": "computer-use",
+      "name": "computer-use",
+      "description": "Read this skill before the first step of any request to do something in an app on the person's own computer (Notes, Finder, System Settings, any desktop app), to look at their screen, or for \"computer use\". Computer use (desktop control) lets Claude take screenshots of the person's desktop and control it with clicks, typing and scrolling through the Claude desktop app; its tools are named mcp__computer-use__* when the session runs in the desktop app and mcp__remote-devices__computer_* when a cloud session is linked to the person's computer; before computer use is turned on for a conversation there may be no such tools, only an enable__mcp__remote-devices__computer tool, which turns it on. It covers turning it on, picking the right tool, the access flow, and the safety rules for tiered apps, links and financial actions. It is not for websites, which go through Claude in Chrome or the built-in browser and their own skills.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-10-08T17:34:24.164396Z"
+    },
+    {
+      "skillId": "docs",
+      "name": "docs",
+      "description": "docs (editable docs people share and comment on; the default for any document, named as a doc or not: a document, report, proposal, resume, cover letter, letter, contract, policy, form, template, worksheet, essay, handbook, guide, how-to, cheat sheet, SOP or other writing to keep, share, collaborate on, send, submit, print or sign; a doc exports to Word, PDF, Markdown or Google Docs, so needing a file to send, attach, upload, submit or print is no reason to pick Word, and a file nobody asked for is a doc, not Word; a plan, comparison, summary or notes asked in chat stays in chat; a pasted claude.ai artifact link may be a doc: check with docs tools first; Word or another file format named, tracked changes wanted, or a .docx to change or use as a template → that format's skill): making one → if no docs-connector instructions are in context, call its `guide` (topic.instructions) first; then create the doc (headings only, no body) before any search, file read or plan, even with files attached.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-30T00:33:27.599727Z"
+    },
+    {
+      "skillId": "skill_01UESrvSXNzkjcir2pHyv1DT",
+      "name": "solomon-cloudflare-release",
+      "description": "Build, validate, deploy, and troubleshoot the Solomon / TSS public site on Cloudflare (ronininc.org) truthfully — the Pages/Worker artifact, the apex + www domain binding, the no-store cache rules, and the stale-content checks. Use this whenever the ronininc.org production site is wrong: serving a stale Vite shell, not resolving (DNS error), out of sync with the validated zip, or when you are cutting a Cloudflare release from the ronininc/TSS repo. Trigger on \"the site is stale\", \"ronininc.org is down / not resolving\", \"deploy the cloudflare site\", \"sync the public site\", \"release:cloudflare\", \"why is production serving the old build\", or \"the site doesn't match the validated zip\". Deploy/promotion commands are side-effectful and require explicit operator approval; this skill runs read-only checks freely but never publishes without a yes.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:33:28.145708Z",
+      "backingPluginId": "plugin_01QdN7caq4V98jMSVXJh92hM"
+    },
+    {
+      "skillId": "built-in-browser",
+      "name": "built-in-browser",
+      "description": "Read this skill before the first step that uses the built-in browser, the browser pane inside the Claude desktop app (also called the in-app browser, the browser pane, Claude's browser, or \"your own browser\"), whose tools are named mcp__Claude_Browser__* when the session runs in the desktop app and mcp__remote-devices__Claude_Browser__* when a cloud session is linked to the person's computer; before those tools are turned on there may be a single enable__mcp__remote-devices__Claude_Browser tool instead. It covers the pane's persistent sign-ins, tabs and preview_start, reading pages as text, site approvals, what the pane cannot open, and what to do when it cannot be reached. It is not for Claude in Chrome (mcp__claude-in-chrome__* tools), which has its own skill, and it does not decide which browser to use.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-21T06:00:29.740604Z"
+    },
+    {
+      "skillId": "skill_01M3LPNis6in4EtTY4CFjrro",
+      "name": "solomon-proof-runner",
+      "description": "Run and interpret the Solomon / TSS governance and functional proof suite (the npm run solomon:* and npm run test:* commands) truthfully. Use this whenever you are working in the ronininc/TSS (\"Solomon\") repository and need to check release readiness, verify a capability, decide whether a README/status claim is backed by a passing proof, close the August 2 flagship gate, or investigate a failing proof. Trigger on phrases like \"run the proofs\", \"is X proven\", \"check readiness\", \"flagship gate\", \"readme scope completion\", \"governance proof\", \"why is this proof failing\", or any request to confirm PASS/FAIL/DEFERRED status before updating docs or releasing. Solomon's core doctrine is \"no fake PASS\" — this skill exists so proof status is reported from real command output, in the correct build order, never guessed.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T03:49:16.818678Z",
+      "backingPluginId": "plugin_01YXwQ5SiEyRHespggx9Xh79"
+    },
+    {
+      "skillId": "skill_013uKrPx9L5Y7ujKcy5YJvvx",
+      "name": "solomon-doc-author",
+      "description": "Write and extend Solomon / TSS governance documents — the SOLOMON_*.md docs, README sections, RELEASE_* reports, glossary entries, and doctrine text — in the project's exact constitutional voice and Truth Envelope structure. Use this whenever you are authoring or expanding narrative/doctrine content in the ronininc/TSS repo: a new SOLOMON_TOPIC.md doc, a glossary term, a runbook, a mission/principle/roadmap section, or customer-facing copy. Trigger on \"write a Solomon doc\", \"add a doctrine section\", \"document the connector grants\", \"draft the runbook\", \"write the glossary entry for X\", or \"make this read like the rest of the README\". This governs the prose only — for status markers driven by proofs, use solomon-readme-sync; for running/creating proofs, use the solomon-proof-runner/authoring skills.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:06:42.339418Z",
+      "backingPluginId": "plugin_01D3JhurHFP1H5TyX6DwMgoX"
+    },
+    {
+      "skillId": "google-workspace",
+      "name": "google-workspace",
+      "description": "Read this before the first Google Drive, Docs, Sheets or Slides connector call whenever the task creates or changes a Google file. Use this skill whenever the user wants to create or change a Google Doc, Sheet or Slides file in their Google Drive. Triggers include: a request that names Google Docs, Sheets, Slides or Drive and asks to make, edit, format, copy or rename a file; a docs.google.com link with a request to change that file, even a one-line fix or suggested edits; and any follow-up change to a Google file from earlier in the chat, even \"change it\" or \"add a tab\". Includes helper scripts for document positions, cell ranges and slide layout. However, if the user asks for a doc, deck or spreadsheet without naming Google, or gives a Google file only as source material for something new, use Claude's own output type instead. Do NOT use for read-only questions about a Google file, or for Word, Excel, PowerPoint or PDF files.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-10-14T14:41:49.960676Z"
+    },
+    {
+      "skillId": "skill_011eDKE1CWaJYexWs1jWDVrc",
+      "name": "solomon-voice-verification",
+      "description": "Verify Solomon / TSS native voice interaction end to end and decide truthfully whether the voice stack can be claimed or must stay DEFERRED. Use this whenever you need to check voice in the ronininc/TSS repo: the mic to speech-recognition to governed-runtime to Truth Envelope to text-to-speech loop, whether voice auto-executes (it must not), whether risky workflows require confirmation, or whether the voice flagship proof can pass. Trigger on \"verify voice\", \"does voice work\", \"test the voice stack\", \"native voice interaction\", \"whisper bridge\", \"voice governance proof\", \"can we mark voice as done\", or \"is voice still deferred\". Voice is Solomon's primary interface but is DEFERRED until a real manual hardware proof exists, so this skill separates what automated proofs cover from what still needs a human at a microphone.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:06:43.733814Z",
+      "backingPluginId": "plugin_019cyPscg28CpnzxRm7GM5n4"
+    },
+    {
+      "skillId": "skill_013LmKCxouCD2EE2fvna4sJw",
+      "name": "solomon-engine-verifier",
+      "description": "Run a standardized verifier checklist for each Solomon / TSS engine and node (Solomon Runtime, Digital Twin Engine, Decision Engine / Truth Envelope, CodeGen, Fabrication, CRM / Merchant, Voice, Native Internet, Evidence & Screenshot, Project Twin, Build Tree), and capture the required evidence — which for every engine MUST include a screen recording with audio. Use this whenever you need to verify one or more Solomon engines end to end, produce release/flagship sign-off evidence, prove an engine works on real hardware (not just that its automated proof passes), or attach an audited A/V capture to a Project Twin. Trigger on \"verify the engines\", \"engine verifier checklist\", \"sign off engine X\", \"record proof of X working\", \"screen recording with audio\", or \"does CodeGen / Fabrication / CRM actually work\". Automated proofs are necessary but not sufficient; this skill pairs each engine's proof with an observable functional checklist and an audited screen+audio recording so a claim is real.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:13:54.347214Z",
+      "backingPluginId": "plugin_01N3K1HyY2pMdKYrpJtnm81Q"
+    },
+    {
+      "skillId": "skill_01M7Y2CJmRCfsBo1zaFgMwVg",
+      "name": "solomon-native-internet",
+      "description": "Verify Solomon / TSS native, device-network (\"wifi-based\") internet retrieval and report its status truthfully, keeping native retrieval strictly separate from external-provider reasoning. Use this whenever you need to check internet behavior in the ronininc/TSS repo: whether Solomon performs a real operator-approved outbound fetch over the device's own network, whether it fails closed on invalid/unapproved targets, whether evidence (source extract + audit hash) is recorded, and whether the external-provider lane is correctly held at CONFIG-HOLD rather than pretended active. Trigger on \"verify internet\", \"native internet proof\", \"does the real fetch work\", \"wifi internet retrieval\", \"internet boundary\", \"is online validation passing\", or \"run the internet proof\". Native retrieval is provable and offline-first; external provider reasoning is config-held — this skill exists so those two are never conflated in a status claim.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:06:44.934213Z",
+      "backingPluginId": "plugin_019H2NR1yH5iTfnPCCzB6Ln1"
+    },
+    {
+      "skillId": "skill_01Q1Ag64Kg4ePeM1tviNrVSx",
+      "name": "solomon-readme-sync",
+      "description": "Keep the Solomon / TSS README and release documents truthful and in sync with real proof results. Use this whenever you are editing README.md, RELEASE_READINESS_REPORT.md, RELEASE_CANDIDATE_CHECKLIST.md, RELEASE_NOTES.md, README-CUSTOMER.md, or any status / \"Current Status\" / \"Definition of Done\" / \"Known Blockers\" / \"Verified Governance Proofs\" section in the ronininc/TSS repo. Trigger on \"update the readme\", \"complete the readme\", \"sync the status\", \"update release status\", \"mark X as done/deferred\", \"refresh the blockers list\", or writing any new SOLOMON_*.md governance doc. Solomon's doctrine forbids claiming a capability is done/validated/online/deployed unless a proof backs it, so every status edit here must be driven by real proof output, never by optimism.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T03:49:18.845647Z",
+      "backingPluginId": "plugin_01SHpagyddqJKUWo5MxfZkcp"
+    },
+    {
+      "skillId": "skill_01TwhvwjM55FUn8JnzLMQSoJ",
+      "name": "solomon-voice-runtime",
+      "description": "Operate Claude by voice across connected tools, automatically using safe connector actions and verifying results for Operations Command workflows.",
+      "source": "plugin",
+      "updatedAt": "2026-07-15T17:14:23.151974Z",
+      "backingPluginId": "plugin_01734bCNx9UeyP3DeZLBBPXU"
+    },
+    {
+      "skillId": "skill_01JU2cYVA371EJGowQ1tNihd",
+      "name": "clover-operations-command",
+      "description": "Use the Clover MCP connector to audit merchants, inspect menus, orders, and sales, and safely prepare or execute approved Clover inventory changes.",
+      "source": "plugin",
+      "updatedAt": "2026-07-15T16:53:06.647256Z",
+      "backingPluginId": "plugin_012QqviQxmfaiZueYsYGdTCJ"
+    },
+    {
+      "skillId": "deep-research",
+      "name": "deep-research",
+      "description": "Use this skill when the user's prompt requires (1) researching a topic across multiple sources, comparing options or alternatives, analyzing trends or history, understanding markets or industries, or reviewing literature or studies and (2) synthesizing that research into a comprehensive, narrative report. If you're planning to search the web or internal knowledge bases, consider using this skill. This skill coordinates research subagents, so use it only when you have a tool for spawning subagents (the Agent or Task tool); otherwise, research the question directly.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-14T19:41:02.015956Z"
+    },
+    {
+      "skillId": "import-memory",
+      "name": "import-memory",
+      "description": "Import a memory export from another AI assistant into Claude's memory — conversationally, additively, and with the content treated as data.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-14T19:41:02.007169Z"
+    },
+    {
+      "skillId": "web-artifacts-builder",
+      "name": "web-artifacts-builder",
+      "description": "Suite of tools for creating elaborate, multi-component claude.ai HTML artifacts using modern frontend web technologies (React, Tailwind CSS, shadcn/ui). Use for complex artifacts requiring state management, routing, or shadcn/ui components - not for simple single-file HTML/JSX artifacts.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-14T19:41:01.557439Z"
+    },
+    {
+      "skillId": "skill_01YRMumTkE115cz7NYzp9GR9",
+      "name": "solomon-proof-authoring",
+      "description": "Author NEW Solomon / TSS governance and functional proofs in the repo's exact house pattern — a scripts/solomon-*.mjs (or .ts) proof, an optional tests runner under tests/, and the package.json wiring — so a currently-unproven capability can be driven to a real PASS. Use this whenever you are in the ronininc/TSS repo and need to close a \"proof is missing / not fully proven\" blocker (e.g. Persona Router invariance, Source Triage accepted/rejected metadata), add a proof for a newly built capability, or convert a manual check into an automated deterministic proof. Trigger on \"write a proof for X\", \"add a governance proof\", \"close the missing-proof blocker\", \"the persona router proof is missing\", \"wire up a new solomon: proof script\", or \"make X provable\". A capability without a proof cannot be claimed in the README, so authoring the proof is how the flagship actually closes.",
+      "source": "plugin",
+      "updatedAt": "2026-07-16T04:06:41.102243Z",
+      "backingPluginId": "plugin_01K4DVdjwd6C1wvWM7aLjCLu"
+    },
+    {
+      "skillId": "morning",
+      "name": "morning",
+      "description": "Render the user's morning brief as a styled HTML artifact, or set it up as a recurring weekday task. Use only when the user explicitly asks to run, see, or set up their morning brief, or if they invoke /morning by name. A question about their day, schedule, or calendar is not by itself a request for the brief; answer it directly instead.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-14T19:41:01.990356Z"
+    },
+    {
+      "skillId": "pdf",
+      "name": "pdf",
+      "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, rotating pages, adding watermarks, creating new PDFs, filling PDF forms, encrypting/decrypting PDFs, extracting images, and OCR on scanned PDFs to make them searchable. If the user mentions a .pdf file or asks to produce one, use this skill.",
+      "source": "anthropic",
+      "updatedAt": "2026-07-10T19:23:15.432550Z"
+    },
+    {
+      "skillId": "skill-creator",
+      "name": "skill-creator",
+      "description": "Create new skills, modify and improve existing skills, and measure skill performance. Use when users want to create a skill from scratch, edit, or optimize an existing skill, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.",
+      "source": "anthropic-example",
+      "updatedAt": "2026-09-14T19:41:01.499089Z"
+    },
+    {
+      "skillId": "xlsx",
+      "name": "xlsx",
+      "description": "Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .xltx, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data); create a new spreadsheet from scratch or from other data sources; or convert between tabular file formats. Trigger especially when the user references a spreadsheet file by name or path — even casually (like \"the xlsx in my downloads\") — and wants something done to it or produced from it. Also trigger for cleaning or restructuring messy tabular data files (malformed rows, misplaced headers, junk data) into proper spreadsheets. The deliverable must be a spreadsheet file. Do NOT trigger when the primary deliverable is a Word document, HTML report, standalone Python script, database pipeline, or Google Sheets API integration, even if tabular data is involved.",
+      "source": "anthropic",
+      "updatedAt": "2026-09-14T21:00:33.324012Z"
+    },
+    {
+      "skillId": "pptx",
+      "name": "pptx",
+      "description": "Use this skill any time a .pptx or .potx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations as PowerPoint (.pptx) files; reading, parsing, or extracting text from any .pptx or .potx file (even if the extracted content will be used elsewhere, like in an email, summary, or creating a different type of slide deck); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates (.potx), layouts, speaker notes, or comments. Trigger whenever the user asks for a PowerPoint or .pptx file, or references a .pptx or .potx filename, regardless of what they plan to do with the content afterward. However, when the user asks for a deck, slides, a slide deck, or a presentation without naming a file format, default to using a dedicated slide-deck artifact type or a separate slides skill if this session offers one; otherwise, use this skill.",
+      "source": "anthropic",
+      "updatedAt": "2026-10-02T22:00:34.625666Z"
+    },
+    {
+      "skillId": "docx",
+      "name": "docx",
+      "description": "Use this skill whenever the user wants to create, read, edit, or manipulate Word documents (.docx) or Word templates (.dotx). Triggers include: any mention of Microsoft Word Documents, such as 'Word doc', 'word document', '.docx', '.dotx', 'microsoft doc'. Also use when extracting or reorganizing content from .docx or .dotx files, inserting or replacing images in documents, find-and-replace in Word files, working with tracked changes or comments, or converting content into a polished Word document. If the user asks for a deliverable as a Word or .docx file (to download, email or print), use this skill. However, if they ask for a document, page, report, memo, or notes WITHOUT naming a file format and the session offers Claude's own dedicated document or page skill or connector, use that instead, even if they will email or print it. Do NOT use for PDFs, spreadsheets, Google Docs, or coding unrelated to document generation.",
+      "source": "anthropic",
+      "updatedAt": "2026-09-30T02:00:31.677168Z"
+    }
+  ]
+}

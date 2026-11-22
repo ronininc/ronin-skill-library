@@ -33,7 +33,7 @@ real bytes" step that feeds `local-media-transcription-pipeline` (audio → tran
 ## Reference — proven technique (UNWIRED; lift these exact commands)
 
 Documented and executed at
-`/Users/robbiebrown/.claude/projects/-Users-robbiebrown-Projects-TSS/memory/whatsapp-desktop-media-cache-extraction.md`.
+`/Users/robbiebrown/.Codex/projects/-Users-robbiebrown-Projects-TSS/memory/whatsapp-desktop-media-cache-extraction.md`.
 It is a *technique*, not a committed script — the md5-named transcripts in `~/ronin-ingest/transcripts/`
 are the evidence it ran. **Flag for any future build: turn the steps below into a real script; today
 it ships as a runbook only.**

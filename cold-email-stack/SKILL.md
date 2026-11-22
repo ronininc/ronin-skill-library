@@ -32,7 +32,7 @@ mailbox probing cannot run there. Verify through an HTTPS verification API inste
 | Warmup + sending infra | warmbly/warmbly (Go) | Apache-2.0 | Self-hostable warmup + multi-mailbox outreach. The path for new sending domains. |
 | GTM agent (CLI + dashboard) | oneshot-agent/oneshot-gtm (TS) | MIT | Reference for receipt-backed, pay-per-result outbound agents. |
 | AI SDR pipeline | iPythoning/b2b-sdr-agent-template | MIT | 10-stage pipeline + cron layout to compare against the CRM's autopilot. |
-| Claude/Codex GTM skills | explorium-ai/gtm-skills | MIT | Enrichment/prospecting skill patterns. |
+| Codex/Codex GTM skills | explorium-ai/gtm-skills | MIT | Enrichment/prospecting skill patterns. |
 | Sales MCP + skills | LaGrowthMachine/gtm-system | MIT | MCP-server pattern for campaigns + reply handling; mirrors the CRM's /mcp/solomon. |
 | Autonomous sales agent | ethanplusai/harvey (Python) | MIT | Find → write → send → reply → book loop, for comparison. |
 | Lead gen / ICP scoring | buildingopen/opengtm | MIT | Clay/Apollo-style ICP scoring ideas. |

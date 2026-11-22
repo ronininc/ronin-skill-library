@@ -11,7 +11,7 @@ description: >-
   in the `blogs` table is a fully independent blog (its own niche, topics, schedule, AdSense id) — run
   dozens for pennies. COMPLEMENTS website-build-standard (this is the traffic/SEO organ that bolts a
   blog network onto a site; it does NOT build the marketing site) and pluggable-draft-brain (the
-  reference calls Workers AI DIRECTLY via env.AI — swap in draft-brain if you want Claude/OpenAI/
+  reference calls Workers AI DIRECTLY via env.AI — swap in draft-brain if you want Codex/OpenAI/
   self-hosted authorship with fallback). Feeds leads into a crm-build-standard CRM via the on-page CTA.
   Guardrails: ships DISABLED per blog (enabled=0), an at-most-once daily claim prevents duplicate runs
   under overlapping cron ticks, a quality floor rejects thin/empty output, generated HTML is sanitized

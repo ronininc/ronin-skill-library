@@ -29,7 +29,7 @@ audio + original photos) and to `local-media-transcription-pipeline` (audio, not
 ## Reference — proven technique (UNWIRED; lift these exact commands)
 
 Documented at
-`/Users/robbiebrown/.claude/projects/-Users-robbiebrown-Projects-TSS/memory/whatsapp-desktop-media-cache-extraction.md`
+`/Users/robbiebrown/.Codex/projects/-Users-robbiebrown-Projects-TSS/memory/whatsapp-desktop-media-cache-extraction.md`
 (the "Chat text" step). It is a runbook, not a committed script — **flag for a future build: script
 this.** Core pipeline:
 

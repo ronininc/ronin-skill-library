@@ -3,8 +3,10 @@ name: brag-reel
 description: >-
   Cut a short social AD / promo reel (10-35s MP4) for Instagram Reels, TikTok,
   YouTube or LinkedIn out of a screen recording, product screenshots, or photos
-  — built on this machine with ffmpeg and ImageMagick only, no cloud service, no
-  AI video model, no npm install. Use WHENEVER the user wants to "turn this
+  — built on this machine with ffmpeg and ImageMagick; the one cloud call is the
+  Grok TTS voiceover, checked by local Whisper (never macOS `say`). No AI video model, no npm install.
+  Footage of the user's own product is a FRESH screen recording of the live app,
+  never old clips. Use WHENEVER the user wants to "turn this
   recording into an ad", "make a promo/reel/brag video for my app/site/business",
   "cut an ad for Instagram/YouTube/LinkedIn", "make a launch video", "show off
   what we built", or drops a .mov/.mp4 and asks for marketing out of it. Produces
@@ -45,6 +47,15 @@ Render one card and **look at it** before building 20 scenes on a bad assumption
 
 Work in the session scratchpad; deliver finals where the user asked (default a
 folder on `~/Desktop`).
+
+### 0. Product reels: record the live app, fresh
+When the reel is about the user's own app, launch the current build and screen-record it
+now — stored clips in a site's assets folder are old UI. Before driving it, check nobody
+else is (`pgrep -fl avfoundation`, the app's own task board): two agents clicking one app
+ruin both takes. Record with
+`ffmpeg -f avfoundation -capture_cursor 0 -framerate 30 -pixel_format nv12 -i "<screen>:none" -t <s> -vf scale=1512:-2 -c:v h264_videotoolbox -b:v 10M take.mov`
+in the background and stop it with `kill -INT` so the file finalizes. Cut anything that is
+not the app (desktop, other windows, notifications, overlays).
 
 ### 1. Look at the source before writing a word
 Screen recordings are large (2950x1628, 7+ min is normal). **Never decode the
@@ -126,6 +137,29 @@ ffmpeg -v error -y -i s2.mp4 -i cap.png -filter_complex \
 
 A photo under a caption needs a scrim or the text will fail contrast — draw a
 bottom-weighted gradient into the PNG rather than darkening the whole frame.
+
+### 5b. Voiceover — Grok TTS, checked by local Whisper. Never `say`.
+macOS `say` reads as robotic and is not shippable, so it is not a fallback either. Voice
+comes from xAI's Grok TTS via `scripts/grok_tts.py` (standard library, no install):
+
+```bash
+S=~/.Codex/skills/brag-reel/scripts/grok_tts.py
+python3 $S check                      # exit 3 = no key -> stop and ask the user to run:
+                                      #   security add-generic-password -a "$USER" -s xai -w
+python3 $S say "Line two." vo/02.wav  # default voice leo; GROK_VOICE=rex|sal|eve|ara to change
+python3 $S listen vo/02.wav           # local whisper.cpp transcript of what was actually said
+```
+
+- The key is read from `$XAI_API_KEY` or the keychain item `xai` at call time. Never ask
+  for it in chat, never write it to a file, never put it in a command line, and never pull
+  it out of another app's encrypted store (OpenWhispr keeps its own copy).
+- One wav per beat. **Listen back every line** with `listen` (or `grok_tts.match(script,
+  heard)` in a build): anything under ~0.85 word match is re-rendered or re-worded before
+  the mix. Spell brand names the way they should sound ("Ronin Inc dot org").
+- Time each scene to its voice line (line duration + ~0.5s), not the other way round.
+- Mix: `loudnorm=I=-16:TP=-1.5` on the voice, bed around -18 dB under it, limiter on the sum.
+- `scripts/eleven_tts.py` is the ElevenLabs alternative (keychain item `elevenlabs`) if the
+  user asks for it; same `synth()` signature.
 
 ### 6. Join, score, and finish
 

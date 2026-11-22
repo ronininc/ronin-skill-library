@@ -59,7 +59,7 @@ a CC0 scan exists. Everything here was licence-checked on 2026-09-25.
 ## Fetching (tested)
 
 ```bash
-F=~/.claude/skills/aaa-render-sources/scripts/fetch-asset.py
+F=~/.Codex/skills/aaa-render-sources/scripts/fetch-asset.py
 python3 $F search polyhaven textures "rock"            # most-downloaded first
 python3 $F search polyhaven hdris "sunset"
 python3 $F search ambientcg Material "concrete"

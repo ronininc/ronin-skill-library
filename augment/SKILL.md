@@ -2,27 +2,27 @@
 name: augment
 description: >-
   Offload MECHANICAL, bulk, or classification work to a local model via the `augment` CLI instead of
-  generating it inline — so it costs zero Anthropic tokens and saves Claude usage limits. Reach for
+  generating it inline — so it costs zero Anthropic tokens and saves Codex usage limits. Reach for
   this WHENEVER about to hand-produce something a small model can draft: boilerplate, a config/schema/
   type/test stub, a first-draft function or refactor, a D1 migration + matching proof stub, or an
   "explain/review this file" pass; AND whenever the task is a typed DECISION over text — classify,
   score, or yes/no (e.g. "is this a lead or a customer", "rate urgency 1-5", "does this handle nulls")
   — use `augment judge` for a calibrated answer. Also trigger on the user saying "use augment",
   "offload this", "do it locally", "don't burn my limits", or "save tokens". The local model DRAFTS;
-  Claude REVIEWS and integrates. Keep hard reasoning, architecture, security-critical code, and
-  anything correctness-critical on Claude — never blind-trust local output.
+  Codex REVIEWS and integrates. Keep hard reasoning, architecture, security-critical code, and
+  anything correctness-critical on Codex — never blind-trust local output.
 ---
 
-# augment — local-model helper (save Claude limits)
+# augment — local-model helper (save Codex limits)
 
 `augment` is a local-first CLI (on PATH; repo `~/Projects/offline-augment`, also
 `ronininc/offline-augment` on GitHub) that reuses Solomon's routing + model
 selection + egress gate to run work on a local Ollama model. Use it to move
-mechanical work OFF Claude's usage budget.
+mechanical work OFF Codex's usage budget.
 
 ## The division of labor (this is the whole point)
 
-| Offload to `augment` (local, free) | Keep on Claude |
+| Offload to `augment` (local, free) | Keep on Codex |
 |---|---|
 | boilerplate, config, schema/type/test stubs | architecture & design decisions |
 | first-draft function / refactor | tricky bugs, subtle logic |
@@ -47,7 +47,7 @@ augment scaffold "<spec>" --name SLUG --table NAME   # D1 migration + proof stub
 cat data | augment "<prompt>"          # stdin as context (sensitive → local only)
 ```
 
-## The limit-saving loop (how Claude uses it)
+## The limit-saving loop (how Codex uses it)
 
 For a mechanical subtask, shell out instead of typing it yourself:
 
@@ -78,7 +78,7 @@ returns `{value, confidence, reason}` as JSON you can branch on.
 
 The deciding rule is **pattern vs reasoning, and is the round-trip worth it**:
 
-- **Reasoning, not pattern → keep on Claude.** Writing a function is a *pattern*
+- **Reasoning, not pattern → keep on Codex.** Writing a function is a *pattern*
   task the local model does well; predicting a function's *exact* output (test
   expectations, "what does this return"), multi-step logic, or architecture is
   *reasoning* it fails — even when the task looks "narrow." Test EXPECTATIONS in
@@ -89,7 +89,7 @@ The deciding rule is **pattern vs reasoning, and is the round-trip worth it**:
   cold model load can take 120s+; for anything small the latency + memory-pressure
   cost beats the token savings. Offloading trades tokens for wall-clock and RAM —
   only worth it when the generation is big enough to earn that trade.
-- **Security/money/tenancy, or anything correctness-critical unreviewed** → Claude.
+- **Security/money/tenancy, or anything correctness-critical unreviewed** → Codex.
   (Redaction regexes, auth, payments: a confidently-wrong draft is worse than the
   tokens.)
 

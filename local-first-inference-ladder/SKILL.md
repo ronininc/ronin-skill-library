@@ -13,7 +13,7 @@ description: >-
   model reasoning that should "try my own/local model first", "only hit the cloud when local can't
   cope", "fall back across providers", "don't burn my paid API on easy stuff", "never send customer
   data to a cloud model", "which tier answered", or "keep it working with zero keys". COMPLEMENTS
-  pluggable-draft-brain: that is the simpler DRAFT-only try-order (custom→claude→openai→workers-ai,
+  pluggable-draft-brain: that is the simpler DRAFT-only try-order (custom→Codex→openai→workers-ai,
   advance on thrown error, returns text) — THIS is the fuller LADDER delta: local-first default,
   escalate on unusable-not-just-thrown, an overflow-budget/egress gate in front of every cloud tier,
   per-tier kill-switches, and audit of which tier answered. Use draft-brain for "write me text"; use

@@ -1,0 +1,7 @@
+Build slot,Asset (what it shows),Source URL,Type,Quality note,Rights flag,Status
+Hero,EXAMPLE — ~15s oven/dough reel,<instagram reel url>,video,"~1080x1920, on-brand, muted-loop ok",OWN,confirm with client
+Logo,EXAMPLE — wordmark from site header,<site url>,image,"raster; rebuild as SVG",OWN,confirm with client
+Gallery card 1,EXAMPLE — signature pizza,<instagram post url>,image,"square, high-res",OWN,confirm with client
+Menu-item shot,EXAMPLE — item photo,<doordash item url>,image,"small, marketplace-branded",UNCLEAR,client confirm or replace
+Interior / ambiance,EXAMPLE — dining room,<yelp photo url>,image,"user-uploaded",UNCLEAR,client confirm or replace
+Team / roster,(none found),,,,,CLIENT-UPLOAD

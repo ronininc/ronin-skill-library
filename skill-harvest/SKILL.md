@@ -19,7 +19,7 @@ The standing process that turns builds into owned, reusable skills — run it at
 across the whole portfolio. It never duplicates what's already in the library.
 
 ## The pipeline (six steps)
-1. **Snapshot the library** — `ls ~/.claude/skills` for the exact current skill names. The diff is only as
+1. **Snapshot the library** — `ls ~/.Codex/skills` for the exact current skill names. The diff is only as
    good as this snapshot; nothing already here gets re-authored.
 2. **Inventory the target(s)** — one repo or all. Per repo get stack + size + last commit
    (`find … -name .git`; check `wrangler.*`, `worker/`, `public/admin`, source file count). Cheap and fast.
@@ -33,7 +33,7 @@ across the whole portfolio. It never duplicates what's already in the library.
    one. Author-in-the-same-pass roughly halves the work.
 5. **Verify on disk + regenerate the index + the machine catalog** — never trust an agent's word: confirm
    each SKILL.md exists with real content (`wc -c`), then slot the new skills into the composition index
-   recipes. Then regenerate the machine-readable catalog: `node ~/.claude/skills/skill-harvest/build-catalog.mjs`
+   recipes. Then regenerate the machine-readable catalog: `node ~/.Codex/skills/skill-harvest/build-catalog.mjs`
    → rewrites `skill-catalog.json` (the ONE artifact Solomon's build brain and the CRM's D1 seed both read;
    see `SKILLS_DISTRIBUTION_PLAN.md` in TSS). Read its summary: the skill count must match the index, and
    **`orphanReferences` must be empty** — a non-empty list means the index names a skill with no SKILL.md
@@ -41,11 +41,11 @@ across the whole portfolio. It never duplicates what's already in the library.
 6. **Back up to the private GitHub repo** — the harvest isn't finished until the library is pushed. FIRST
    re-run a secret/PII scan over the new/changed SKILL.md files (grep for `sk-`/`sk-ant`, `AKIA`, `ghp_`,
    `-----BEGIN`, `xoxb-`, `AIza`, known client phones/emails, long hardcoded hex/base64) — pushing
-   distributes the content even to a PRIVATE repo, so never push unscanned. Then, in `~/.claude/skills`:
+   distributes the content even to a PRIVATE repo, so never push unscanned. Then, in `~/.Codex/skills`:
    `git add -A && git commit -m "<what this harvest added>" && git push` (this stages the regenerated
    `skill-catalog.json` + `CRM_COMPOSITION_INDEX.md` alongside the new SKILL.md files) — the remote `origin` is
    **github.com/ronininc/ronin-skill-library (PRIVATE)**. Prefix with `SOLOMON_GO=1` if the egress guard
-   blocks the push. NO Claude/AI attribution in the commit message (house no-signature rule). The remote
+   blocks the push. NO Codex/AI attribution in the commit message (house no-signature rule). The remote
    MUST stay private — never add or push to a public remote; client-derived patterns live here.
 
 ## How to run it (workflow template)
@@ -56,7 +56,7 @@ already partly harvested ("what did we miss / what's new since?"). Give every ag
 novel repos — passing 40 thin site-instances would be pure waste, which is exactly what triage prevents.
 Use `agentType: 'general-purpose'` so agents can Write.
 
-Each authoring agent writes `~/.claude/skills/<kebab-name>/SKILL.md`:
+Each authoring agent writes `~/.Codex/skills/<kebab-name>/SKILL.md`:
 ```
 ---
 name: <kebab-name>

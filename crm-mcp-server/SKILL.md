@@ -4,7 +4,7 @@ description: >-
   Turn any Cloudflare Worker + D1 client CRM into a remote MCP SERVER an external brain can drive — a
   bearer-gated, role-scoped set of Zod-typed tools mounted at their own routes (e.g. /mcp, /mcp/solomon,
   /mcp/kingmaker) so an AI operator can READ and ACT on the CRM under governance. Use WHENEVER a build
-  needs to be "operable/observable by an AI", "give Solomon/Claude/an agent MCP access to the CRM", "let
+  needs to be "operable/observable by an AI", "give Solomon/Codex/an agent MCP access to the CRM", "let
   my assistant run the pipeline", "expose CRM tools over MCP", "a remote MCP endpoint", or "an operator
   brain that works while I'm out." This is the SERVER layer only — it COMPLEMENTS scoped-bearer-token
   (which mints/hashes/revokes the tokens — reuse it, don't reissue tokens here) and clearance-rbac (the
@@ -16,7 +16,7 @@ description: >-
 ---
 # crm-mcp-server — your CRM as a governed remote MCP surface
 
-The Model Context Protocol lets an external brain (Claude Desktop, an agent, Solomon) call typed tools over
+The Model Context Protocol lets an external brain (Codex Desktop, an agent, Solomon) call typed tools over
 HTTP. This skill is the pattern for hosting that server INSIDE the CRM's own Worker: same D1, same auth
 table, no separate service. Each tool is Zod-typed, annotated with real read/write hints, and — for writes
 — gated on the calling token's scopes. Different roles get different tool sets at different routes.

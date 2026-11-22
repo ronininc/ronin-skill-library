@@ -1,0 +1,6 @@
+fragment_type,fragment_value,vertical,resolved_entity,entity_tier,tier_rule,test1_account_business,test2_logo,test3_photo_video,test4_cross_link,test5_nap,conflicts_flagged,best_phone,phone_tier,best_email,email_tier,own_socials,ugc_socials,compliance_stamp,sources,notes
+handle,@example_shop,restaurant,,Unknown,,,,,,,,,Unknown,,Unknown,,,DNC+10DLC before use,,
+photo,storefront.jpg,restaurant,,Unknown,,,,,,,,,Unknown,,Unknown,,,,,
+phone,(602) 555-0143,restaurant,,Unknown,,,,,,,,,Unknown,,Unknown,,,DNC before dial,,
+owner_name,John Q Owner,real-estate,,Unknown,,,,,,,,,Unknown,,Unknown,,,DNC+skip-trace-legit-use,,
+website,https://example.com,restaurant,,Unknown,,,,,,,,,Unknown,,Unknown,,,,,

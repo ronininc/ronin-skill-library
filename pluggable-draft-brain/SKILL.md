@@ -3,7 +3,7 @@ name: pluggable-draft-brain
 description: >-
   One tiny helper a Cloudflare Worker + D1 CRM calls whenever it needs a model to DRAFT text (never to
   act): it tries LLM providers in priority order with automatic fallback — a self-hosted
-  OpenAI-compatible endpoint (vLLM/Ollama/sovereign) → Anthropic Claude → OpenAI → the built-in
+  OpenAI-compatible endpoint (vLLM/Ollama/sovereign) → Anthropic Codex → OpenAI → the built-in
   Cloudflare Workers AI — so the feature works with ZERO keys and silently upgrades the moment a key
   is set, and reports WHICH provider answered. Use WHENEVER a build needs "AI-drafted" text without
   hard-wiring one vendor: "draft a reply/caption/email", "add an AI writer", "make the model
@@ -74,7 +74,7 @@ with:** it is the seam UNDER `social-dm-inbox` (reply drafts) and a governed ope
    draft endpoint in those features that calls `draftWithBrain` instead.
 
 ## Gotchas (from the code)
-- **Fallthrough order is fixed and intentional:** self-hosted `custom` → `claude` → `chatgpt` →
+- **Fallthrough order is fixed and intentional:** self-hosted `custom` → `Codex` → `chatgpt` →
   `workers-ai`. Any provider throwing (bad key, model error, timeout, empty response) advances to the
   next; only if ALL configured providers fail does `draftWithBrain` throw the last error. A missing
   key isn't an error — that provider is simply not added to the chain.

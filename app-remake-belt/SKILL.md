@@ -14,7 +14,7 @@ This belt is the **execution layer** under the existing capability-remake pipeli
 
 ## Workflow
 
-Robbie drops the source (reel, article, screen recording). The belt runs in order. Local agents do the work and drive cloud agents (Claude/Codex) through the CRM; cloud work counts only if the local belt logged it.
+Robbie drops the source (reel, article, screen recording). The belt runs in order. Local agents do the work and drive cloud agents (Codex/Codex) through the CRM; cloud work counts only if the local belt logged it.
 
 1. **Reverse Engineer** — Observe the demonstrated *behavior* only: inputs, outputs, user experience, latency/accuracy. Write a behavioral spec in plain language Robbie can read. Clean-room: no binaries, no decompiling, no private APIs, no copying assets.
 2. **Architect** — Design the Solomon-native system from the spec: components, data flow, where it lives (host-local vs CRM), interfaces with existing belts.
